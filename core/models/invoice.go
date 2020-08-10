@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-// Invoice represents an Invoice entity
+// Invoice represents an Invoice entity. A new Invoice must be obtained by using NewInvoice method
 type Invoice struct {
 	ID             int
 	ReferenceMonth int
