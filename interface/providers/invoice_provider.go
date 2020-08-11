@@ -1,7 +1,7 @@
 package providers
 
 import (
-	"github.com/jonathanlazaro1/stone-challenge/core/models"
+	"github.com/jonathanlazaro1/stone-challenge/domain/models"
 )
 
 // InvoiceProvider specifies which declarations Invoice repositories should implement
