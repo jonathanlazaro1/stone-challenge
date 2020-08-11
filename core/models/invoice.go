@@ -11,7 +11,7 @@ type Invoice struct {
 	ReferenceYear  int
 	Document       string
 	Description    string
-	Amount         float32
+	Amount         float64
 	IsActive       bool
 	CreatedAt      time.Time
 	DeactivatedAt  time.Time
