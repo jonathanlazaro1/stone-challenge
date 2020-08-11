@@ -1,7 +1,7 @@
 package invoice
 
 import (
-	"github.com/jonathanlazaro1/stone-challenge/domain/models"
+	di "github.com/jonathanlazaro1/stone-challenge/domain/invoice"
 	"github.com/jonathanlazaro1/stone-challenge/usecase/invoice/repository"
 )
 
@@ -18,6 +18,6 @@ func NewInteractor(invoiceRepository repository.Invoice) *Interactor {
 }
 
 // GetMany returns an array of Invoices, according to the given arguments
-func (interactor *Interactor) GetMany(itemsPerPage int, page int, filterBy map[string]string, sortBy map[string]bool) (*[]models.Invoice, error) {
+func (interactor *Interactor) GetMany(itemsPerPage int, page int, filterBy map[string]string, sortBy map[string]bool) (*[]di.Invoice, error) {
 	return interactor.repository.GetMany(itemsPerPage, page, filterBy, sortBy)
 }
