@@ -19,8 +19,9 @@ func MockInvoiceProvider() pv.InvoiceProvider {
 	return mockedProvider
 }
 
-func (mp *mockedInvoiceProvider) PopulateMockedProvider() {
-	for i := 0; i < 10; i++ {
+// PopulateMockedProvider puts i invoices inside the mocked provider
+func (mp *mockedInvoiceProvider) PopulateMockedProvider(i int) {
+	for i := 1; i < i; i++ {
 		mp.invoices = append(mp.invoices, models.MakeFakeInvoice())
 	}
 }
