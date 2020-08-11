@@ -8,6 +8,7 @@ import (
 type Invoice struct {
 	ID             int
 	ReferenceMonth int
+	ReferenceYear  int
 	Document       string
 	Description    string
 	Amount         float32
