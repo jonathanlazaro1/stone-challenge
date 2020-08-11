@@ -14,7 +14,7 @@ func substr(str string, maxLen int) string {
 	return string(runes[:maxLen-1])
 }
 
-// MakeFakeInvoice will generate an Invoice with fake populated data
+// MakeFakeInvoice generates an Invoice with fake populated data
 func MakeFakeInvoice() Invoice {
 	in := NewInvoice()
 	in.ID = gofakeit.Number(1, 100000)
