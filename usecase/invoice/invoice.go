@@ -18,6 +18,6 @@ func NewInteractor(invoiceRepository repository.Invoice) *Interactor {
 }
 
 // GetMany returns an array of Invoices, according to the given arguments
-func (interactor *Interactor) GetMany(itemsPerPage int, page int, filterBy map[string]string, sortBy map[string]bool) (*[]di.Invoice, error) {
+func (interactor *Interactor) GetMany(itemsPerPage int, page int, filterBy map[string]string, sortBy map[string]bool) ([]di.Invoice, error) {
 	return interactor.repository.GetMany(itemsPerPage, page, filterBy, sortBy)
 }
