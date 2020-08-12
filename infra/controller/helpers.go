@@ -5,15 +5,16 @@ import (
 	"strconv"
 )
 
-// ParsePageNumber parses a page number p from a map
-func ParsePageNumber(query url.Values) (int, error) {
-	sPage := query.Get("p")
-	if sPage == "" {
-		return 1, nil
+// ParseParamToInt gets an URL param and tries to convert it to an integer
+func ParseParamToInt(query url.Values, key string, defaultValue int) (int, error) {
+	sParam := query.Get(key)
+	if sParam == "" {
+		return defaultValue, nil
 	}
-	page, err := strconv.Atoi(sPage)
+	param, err := strconv.Atoi(sParam)
 	if err != nil {
 		return -1, err
 	}
-	return page, nil
+
+	return param, nil
 }
