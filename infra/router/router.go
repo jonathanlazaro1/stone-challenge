@@ -2,14 +2,19 @@ package router
 
 import (
 	"github.com/gorilla/mux"
-	"github.com/jonathanlazaro1/stone-challenge/infrastructure/router/home"
+	"github.com/jonathanlazaro1/stone-challenge/infra/controller/home"
 )
 
 // Router returns a instance of mux.Router ready to listen and respond to requests
 func Router() *mux.Router {
 	router := mux.NewRouter()
+	router.StrictSlash(true)
 
-	router.HandleFunc("/", home.Index).Methods("GET", "OPTIONS")
+	router.HandleFunc("/", home.IndexHandler).Methods("GET", "OPTIONS")
+
+	apiv1 := router.PathPrefix("/api/v1/").Subrouter()
+
+	addInvoiceHandler(apiv1.Path("/invoice/").Subrouter())
 
 	return router
 }
