@@ -13,7 +13,7 @@ const maxItemsPerPage = 50
 const errParsingPageNumber = "Error parsing page number"
 const errParsingItemsPerPage = "Error parsing items per page"
 const errMaxItemsPerPageAllowed = "Max items per page allowed: %v"
-const errParsingFilters = "Error parsing filters"
+const errParsingSortParams = "Error parsing sort params"
 
 // GetManyHandler returns an array of Invoices
 func GetManyHandler(w http.ResponseWriter, r *http.Request) {
@@ -26,7 +26,7 @@ func GetManyHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	itemsPerPage, err := parseParamToInt(pathParams, "ipp", maxItemsPerPage)
+	itemsPerPage, err := parseParamToInt(pathParams, "itemsPerPage", maxItemsPerPage)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		io.WriteString(w, errParsingItemsPerPage)
@@ -41,16 +41,16 @@ func GetManyHandler(w http.ResponseWriter, r *http.Request) {
 
 	service := service.BuildInvoiceService()
 
-	filterBy, err := parseFilterByToMap(pathParams)
+	filterBy := parseFilterByToMap(pathParams)
+
+	sortBy, err := parseSortByToMap(pathParams)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		io.WriteString(w, errParsingFilters)
+		io.WriteString(w, errParsingSortParams)
 		return
 	}
 
-	sortByMap := make(map[string]bool)
-
-	invoices, err := service.GetMany(10, page, filterBy, sortByMap)
+	invoices, err := service.GetMany(itemsPerPage, page, filterBy, sortBy)
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(invoices)
