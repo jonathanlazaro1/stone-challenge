@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/jonathanlazaro1/stone-challenge/infrastructure/router"
+	"github.com/jonathanlazaro1/stone-challenge/infra/router"
 )
 
 func main() {
