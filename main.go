@@ -5,10 +5,12 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/jonathanlazaro1/stone-challenge/infra/pgsql"
 	"github.com/jonathanlazaro1/stone-challenge/infra/router"
 )
 
 func main() {
+	pgsql.Migrate()
 	r := router.Router()
 
 	fmt.Println("Starting server on port 8080...")
