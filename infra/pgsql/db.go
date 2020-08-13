@@ -4,34 +4,35 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"os"
 
-	"github.com/joho/godotenv"
-
+	"github.com/jonathanlazaro1/stone-challenge/config"
 	// PGSQL driver
 	_ "github.com/lib/pq"
 )
 
 // CreateConnection tries to create a DBConnection using PGSQL. It panics if is not possible to connect to the DB specified in .env
 func CreateConnection() *sql.DB {
-	err := godotenv.Load(".env")
+	env := config.GetConfig()
+
+	connStr := fmt.Sprintf("postgres://%v:%v@%v:%v/%v",
+		env.DBUser,
+		env.DBPass,
+		env.DBHost,
+		env.DBPort,
+		env.DBName)
+
+	db, err := sql.Open("postgres", connStr)
 
 	if err != nil {
-		log.Fatalf("Error loading .env file")
-	}
-
-	db, err := sql.Open("postgres", os.Getenv("POSTGRES_URL"))
-
-	if err != nil {
-		panic(err)
+		log.Fatalln(err)
 	}
 
 	err = db.Ping()
 
 	if err != nil {
-		panic(err)
+		log.Fatalln(err)
 	}
 
-	fmt.Println("Successfully connected!")
+	log.Println("PGSQL Successfully connected!")
 	return db
 }
