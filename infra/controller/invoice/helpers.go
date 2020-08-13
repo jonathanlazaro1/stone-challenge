@@ -61,29 +61,28 @@ func parseFilterByToMap(query url.Values) map[string]string {
 }
 
 // parseSortByToMap gets URL param "sort" and tries to convert it to a list of valid Invoice sort params
-func parseSortByToMap(query url.Values) (map[string]bool, error) {
+func parseSortByToMap(query url.Values) map[string]bool {
 	ret := map[string]bool{}
-	var err error
 
 	sortQuery := query.Get("sort")
 	if sortQuery == "" {
-		return ret, nil
+		return ret
 	}
 
 	sorts := strings.Split(sortQuery, ",")
 
 	for _, sort := range sorts {
 		q := strings.Split(sort, ":")
-		if len(q) < 2 {
-			continue
-		}
+
 		if !isValidInvoiceParam(q[0]) {
 			continue
 		}
-		ret[q[0]], err = strconv.ParseBool(q[1])
-		if err != nil {
-			return nil, err
+		descending := false
+		if len(q) > 2 && q[1] == "desc" {
+			descending = true
 		}
+		ret[q[0]] = descending
+
 	}
-	return ret, nil
+	return ret
 }

@@ -43,12 +43,7 @@ func GetManyHandler(w http.ResponseWriter, r *http.Request) {
 
 	filterBy := parseFilterByToMap(pathParams)
 
-	sortBy, err := parseSortByToMap(pathParams)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		io.WriteString(w, errParsingSortParams)
-		return
-	}
+	sortBy := parseSortByToMap(pathParams)
 
 	invoices, err := service.GetMany(itemsPerPage, page, filterBy, sortBy)
 
