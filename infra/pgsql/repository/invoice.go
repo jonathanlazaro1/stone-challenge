@@ -35,12 +35,16 @@ func (repo *invoiceRepository) GetMany(itemsPerPage int, page int, filterBy map[
 		}
 	}
 
-	// if len(orderBy) > 0 {
-	// 	sqlOrderBy = "ORDER BY"
-	// 	for k, v := range filterBy {
-	// 		sqlOrderBy = fmt.Sprintf("%v AND %v = %v", sqlWhere, k, v)
-	// 	}
-	// }
+	if len(sortBy) > 0 {
+		sqlOrderBy = "ORDER BY"
+		for k, v := range sortBy {
+			direction := "ASC"
+			if v {
+				direction = "DESC"
+			}
+			sqlOrderBy = fmt.Sprintf("%v %v %v,", sqlOrderBy, k, direction)
+		}
+	}
 
 	rows, err := db.Query(fmt.Sprintf("%v %v %v %v;", sqlStatement, sqlWhere, sqlOrderBy, sqlLimitOffset))
 
