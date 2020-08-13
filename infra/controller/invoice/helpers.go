@@ -17,7 +17,10 @@ func isValidInvoiceParam(str string) bool {
 	return false
 }
 
-// ParseParamToInt gets an URL param and tries to convert it to an integer
+// ParseParamToInt gets an URL param and tries to convert it to an integer.
+// If the URL param is empty, it returns the default value.
+// If the converted value is below 1, it retuns 1.
+// If the conversion to an integer does not succeed, it returns an error.
 func parseParamToInt(query url.Values, key string, defaultValue int) (int, error) {
 	sParam := query.Get(key)
 	if sParam == "" {
@@ -26,6 +29,9 @@ func parseParamToInt(query url.Values, key string, defaultValue int) (int, error
 	param, err := strconv.Atoi(sParam)
 	if err != nil {
 		return -1, err
+	}
+	if param < 1 {
+		param = 1
 	}
 
 	return param, nil
