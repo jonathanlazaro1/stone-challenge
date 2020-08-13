@@ -52,6 +52,12 @@ func GetManyHandler(w http.ResponseWriter, r *http.Request) {
 
 	invoices, err := service.GetMany(itemsPerPage, page, filterBy, sortBy)
 
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		io.WriteString(w, "Unable to fetch invoices")
+		return
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(invoices)
 }
