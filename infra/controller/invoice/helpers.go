@@ -8,7 +8,7 @@ import (
 
 // isValidInvoiceParam checks if a string is a valid Invoice filter/sort param
 func isValidInvoiceParam(str string) bool {
-	params := [3]string{"year_reference", "month_reference", "document"}
+	params := [3]string{"reference_year", "reference_month", "document"}
 	for _, p := range params {
 		if p == str {
 			return true
@@ -38,7 +38,8 @@ func parseParamToInt(query url.Values, key string, defaultValue int) (int, error
 }
 
 // parseFilterByToMap gets URL param "filter" and tries to convert it to a list of valid Invoice filter params
-func parseFilterByToMap(query url.Values) (ret map[string]string) {
+func parseFilterByToMap(query url.Values) map[string]string {
+	ret := map[string]string{}
 	filterQuery := query.Get("filter")
 	if filterQuery == "" {
 		return ret
@@ -60,7 +61,10 @@ func parseFilterByToMap(query url.Values) (ret map[string]string) {
 }
 
 // parseSortByToMap gets URL param "sort" and tries to convert it to a list of valid Invoice sort params
-func parseSortByToMap(query url.Values) (ret map[string]bool, err error) {
+func parseSortByToMap(query url.Values) (map[string]bool, error) {
+	ret := map[string]bool{}
+	var err error
+
 	sortQuery := query.Get("sort")
 	if sortQuery == "" {
 		return ret, nil
