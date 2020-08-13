@@ -24,9 +24,25 @@ func (repo *invoiceRepository) GetMany(itemsPerPage int, page int, filterBy map[
 
 	invoices := []invoice.Invoice{}
 
-	sqlStatement := fmt.Sprintf("SELECT id, reference_year, reference_month, document, description, amount, is_active, created_at, deactivated_at FROM invoice LIMIT %v OFFSET %v;", itemsPerPage, (itemsPerPage * (page - 1)))
+	sqlStatement := "SELECT id, reference_year, reference_month, document, description, amount, is_active, created_at, deactivated_at FROM invoice"
+	sqlWhere := "WHERE is_active = true"
+	sqlOrderBy := ""
+	sqlLimitOffset := fmt.Sprintf("LIMIT %v OFFSET %v;", itemsPerPage, (itemsPerPage * (page - 1)))
 
-	rows, err := db.Query(sqlStatement)
+	if len(filterBy) > 0 {
+		for k, v := range filterBy {
+			sqlWhere = fmt.Sprintf("%v AND %v = %v", sqlWhere, k, v)
+		}
+	}
+
+	// if len(orderBy) > 0 {
+	// 	sqlOrderBy = "ORDER BY"
+	// 	for k, v := range filterBy {
+	// 		sqlOrderBy = fmt.Sprintf("%v AND %v = %v", sqlWhere, k, v)
+	// 	}
+	// }
+
+	rows, err := db.Query(fmt.Sprintf("%v %v %v %v;", sqlStatement, sqlWhere, sqlOrderBy, sqlLimitOffset))
 
 	if err != nil {
 		log.Printf("Unable to fetch invoices. %v", err)
