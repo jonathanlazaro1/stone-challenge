@@ -47,5 +47,5 @@ func Migrate() {
 			log.Fatalf("Could not execute migration %v: %v", file, err)
 		}
 	}
-	log.Println("Migrations applied successfully")
+	log.Println("PGSQL migrations applied successfully")
 }
