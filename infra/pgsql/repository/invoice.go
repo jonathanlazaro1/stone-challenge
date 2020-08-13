@@ -5,32 +5,49 @@ import (
 
 	"github.com/jonathanlazaro1/stone-challenge/domain/invoice"
 	"github.com/jonathanlazaro1/stone-challenge/infra/pgsql"
+	"github.com/jonathanlazaro1/stone-challenge/usecase/invoice/repository"
 )
 
-func getAllUsers() ([]invoice.Invoice, error) {
+type invoiceRepository struct {
+}
+
+// GetInvoiceRepository returns an implementation of InvoiceRepository that relies on a PGSQL DB
+func GetInvoiceRepository() repository.Invoice {
+	return &invoiceRepository{}
+}
+
+// GetMany fetches all invoices found on DB table invoice, according to the parameters given
+func (repo *invoiceRepository) GetMany(itemsPerPage int, page int, filterBy map[string]string, sortBy map[string]bool) ([]invoice.Invoice, error) {
 	db := pgsql.CreateConnection()
 	defer db.Close()
 
-	var invoices []invoice.Invoice
+	invoices := []invoice.Invoice{}
 
-	sqlStatement := `SELECT () FROM invoices`
+	sqlStatement := `SELECT (id,reference_year,reference_month,document,description,amount,is_active,created_at,deactivated_at) FROM invoice;`
 
 	rows, err := db.Query(sqlStatement)
 
 	if err != nil {
-		log.Fatalf("Unable to execute the query. %v", err)
+		log.Printf("Unable to fetch invoices: %v", err)
 	}
 
 	defer rows.Close()
 
 	for rows.Next() {
 		var invoice invoice.Invoice
-
-		// unmarshal the row object to user
-		// err = rows.Scan(&user.ID, &user.Name, &user.Age, &user.Location)
+		err = rows.Scan(
+			&invoice.ID,
+			&invoice.ReferenceYear,
+			&invoice.ReferenceMonth,
+			&invoice.Document,
+			&invoice.Description,
+			&invoice.Amount,
+			&invoice.IsActive,
+			&invoice.CreatedAt,
+			&invoice.DeactivatedAt)
 
 		if err != nil {
-			log.Fatalf("Unable to scan the row. %v", err)
+			log.Printf("Unable to fetch invoices: %v", err)
 		}
 
 		invoices = append(invoices, invoice)

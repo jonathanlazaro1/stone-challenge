@@ -1,13 +1,13 @@
 package service
 
 import (
+	"github.com/jonathanlazaro1/stone-challenge/infra/pgsql/repository"
 	"github.com/jonathanlazaro1/stone-challenge/usecase/invoice"
-	"github.com/jonathanlazaro1/stone-challenge/usecase/invoice/test"
 )
 
 // BuildInvoiceService builds a new InvoiceInteractor with the specified repository
 func BuildInvoiceService() *invoice.Interactor {
-	repo := test.MockInvoiceRepository(50)
+	repo := repository.GetInvoiceRepository()
 	service := invoice.NewInteractor(repo)
 
 	return service
