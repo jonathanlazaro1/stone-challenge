@@ -4,11 +4,15 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/jonathanlazaro1/stone-challenge/config"
+
 	"github.com/jonathanlazaro1/stone-challenge/infra/pgsql"
 	"github.com/jonathanlazaro1/stone-challenge/infra/router"
 )
 
 func main() {
+	config.Load()
+
 	pgsql.Migrate()
 	r := router.Router()
 

@@ -16,14 +16,17 @@ type Config struct {
 	DBPass string
 }
 
-// GetConfig generates a ponter to a Config object, filling it with values taken from the environment
+// Load attempts to load .env var from the projects's root folder
+func Load() {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatalf("Error loading .env file: %v", err)
+	}
+}
+
+// GetConfig generates a pointer to a Config object, filling it with values taken from the environment
 func GetConfig() *Config {
 	config := &Config{}
-	err := godotenv.Load(".env")
-
-	if err != nil {
-		log.Fatalf("Error loading .env file")
-	}
 
 	config.DBUser = os.Getenv("DB_USER")
 	config.DBPass = os.Getenv("DB_PASS")
