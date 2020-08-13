@@ -3,18 +3,12 @@ package test
 import (
 	"time"
 
+	"github.com/jonathanlazaro1/stone-challenge/helpers"
+
 	"github.com/brianvoe/gofakeit/v5"
 	in "github.com/jonathanlazaro1/stone-challenge/domain/invoice"
 	rp "github.com/jonathanlazaro1/stone-challenge/usecase/invoice/repository"
 )
-
-func substr(str string, maxLen int) string {
-	runes := []rune(str)
-	if len(runes) < maxLen {
-		return string(runes)
-	}
-	return string(runes[:maxLen-1])
-}
 
 type mockedInvoiceRepository struct {
 	invoices []in.Invoice
@@ -45,8 +39,8 @@ func MakeFakeInvoice() in.Invoice {
 	in.ReferenceYear = gofakeit.Number(currYear-5, currYear-1)
 	in.ReferenceMonth = gofakeit.Number(1, 12)
 
-	in.Document = substr(gofakeit.Phrase(), 14)
-	in.Description = substr(gofakeit.Phrase(), 256)
+	in.Document = helpers.Substring(gofakeit.Phrase(), 14)
+	in.Description = helpers.Substring(gofakeit.Phrase(), 256)
 	in.Amount = gofakeit.Price(0.01, 1000000)
 
 	return in
