@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/jonathanlazaro1/stone-challenge/domain/invoice"
@@ -23,12 +24,12 @@ func (repo *invoiceRepository) GetMany(itemsPerPage int, page int, filterBy map[
 
 	invoices := []invoice.Invoice{}
 
-	sqlStatement := `SELECT (id,reference_year,reference_month,document,description,amount,is_active,created_at,deactivated_at) FROM invoice;`
+	sqlStatement := fmt.Sprintf("SELECT id, reference_year, reference_month, document, description, amount, is_active, created_at, deactivated_at FROM invoice LIMIT %v OFFSET %v;", itemsPerPage, (itemsPerPage * (page - 1)))
 
 	rows, err := db.Query(sqlStatement)
 
 	if err != nil {
-		log.Printf("Unable to fetch invoices: %v", err)
+		log.Printf("Unable to fetch invoices. %v", err)
 	}
 
 	defer rows.Close()
@@ -47,7 +48,8 @@ func (repo *invoiceRepository) GetMany(itemsPerPage int, page int, filterBy map[
 			&invoice.DeactivatedAt)
 
 		if err != nil {
-			log.Printf("Unable to fetch invoices: %v", err)
+			log.Printf("Unable to fetch invoices. %v", err)
+			return nil, err
 		}
 
 		invoices = append(invoices, invoice)
