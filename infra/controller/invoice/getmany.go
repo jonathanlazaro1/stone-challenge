@@ -26,7 +26,7 @@ func GetManyHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	itemsPerPage, err := parseParamToInt(pathParams, "itemsPerPage", maxItemsPerPage)
+	itemsPerPage, err := parseParamToInt(pathParams, "itemsperpage", maxItemsPerPage)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		io.WriteString(w, errParsingItemsPerPage)

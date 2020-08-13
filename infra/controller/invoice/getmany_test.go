@@ -40,7 +40,7 @@ func TestInvoiceGetManyHandlerWithoutParameters(t *testing.T) {
 
 func TestInvoiceGetManyHandlerWithItemsPerPage(t *testing.T) {
 	verb := "GET"
-	endpoint := "/api/v1/invoice?ipp=20"
+	endpoint := "/api/v1/invoice?itemsperpage=20"
 	req, err := http.NewRequest(verb, endpoint, nil)
 
 	if err != nil {
@@ -66,7 +66,7 @@ func TestInvoiceGetManyHandlerWithItemsPerPage(t *testing.T) {
 
 func TestInvoiceGetManyHandlerWithUnparseableItemsPerPage(t *testing.T) {
 	verb := "GET"
-	endpoint := "/api/v1/invoice?itemsPerPage=notagreatitemsperpage"
+	endpoint := "/api/v1/invoice?itemsperpage=notagreatitemsperpage"
 	req, err := http.NewRequest(verb, endpoint, nil)
 
 	if err != nil {
@@ -92,7 +92,7 @@ func TestInvoiceGetManyHandlerWithUnparseableItemsPerPage(t *testing.T) {
 
 func TestInvoiceGetManyHandlerWithExcessiveItemsPerPage(t *testing.T) {
 	verb := "GET"
-	endpoint := "/api/v1/invoice?itemsPerPage=1445332"
+	endpoint := "/api/v1/invoice?itemsperpage=1445332"
 	req, err := http.NewRequest(verb, endpoint, nil)
 
 	if err != nil {
