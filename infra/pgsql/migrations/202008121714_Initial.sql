@@ -1,4 +1,4 @@
-CREATE TABLE invoice (
+CREATE TABLE IF NOT EXISTS invoice (
     id serial,
     reference_year int4 NULL,
     reference_month int4 NULL,
