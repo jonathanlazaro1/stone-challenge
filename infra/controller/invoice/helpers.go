@@ -78,7 +78,7 @@ func parseSortByToMap(query url.Values) map[string]bool {
 			continue
 		}
 		descending := false
-		if len(q) > 2 && q[1] == "desc" {
+		if len(q) > 1 && q[1] == "desc" {
 			descending = true
 		}
 		ret[q[0]] = descending
