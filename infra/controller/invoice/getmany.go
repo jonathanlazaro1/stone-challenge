@@ -63,5 +63,4 @@ func GetManyHandler(w http.ResponseWriter, r *http.Request) {
 		Items:      invoices,
 		TotalItems: total,
 	})
-	return
 }
