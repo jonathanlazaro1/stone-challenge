@@ -21,7 +21,7 @@ type getManyResult struct {
 	TotalItems int64             `json:"totalItems"`
 }
 
-// GetManyHandler returns an array of Invoices
+// GetManyHandler handles a request to many Invoices
 func GetManyHandler(w http.ResponseWriter, r *http.Request) {
 	pathParams := r.URL.Query()
 
