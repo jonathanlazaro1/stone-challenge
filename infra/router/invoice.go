@@ -8,4 +8,5 @@ import (
 // addInvoiceHandler tells a mux.Router how to handle requests to /invoice
 func addInvoiceHandler(r *mux.Router) {
 	r.HandleFunc("/", invoice.GetManyHandler).Methods("GET", "OPTIONS")
+	r.HandleFunc("/{id:[0-9]+}", invoice.GetHandler).Methods("GET", "OPTIONS")
 }
