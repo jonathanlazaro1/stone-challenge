@@ -1,10 +1,11 @@
 package repository
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/doug-martin/goqu/v9"
-	"github.com/jonathanlazaro1/stone-challenge/domain/invoice"
+	domain "github.com/jonathanlazaro1/stone-challenge/domain/invoice"
 	"github.com/jonathanlazaro1/stone-challenge/infra/pgsql"
 	"github.com/jonathanlazaro1/stone-challenge/usecase/invoice/repository"
 
@@ -21,30 +22,18 @@ func GetInvoiceRepository() repository.Invoice {
 }
 
 // GetMany fetches all invoices found on DB table invoice, according to the parameters given. It also returns the total count for the query made
-func (repo *invoiceRepository) GetMany(itemsPerPage int, page int, filterBy map[string]string, sortBy map[string]bool) ([]invoice.Invoice, int64, error) {
+func (repo *invoiceRepository) GetMany(itemsPerPage int, page int, filterBy map[string]string, sortBy map[string]bool) ([]domain.Invoice, int64, error) {
 	db := pgsql.CreateConnection()
 	defer db.Close()
 	database := goqu.New("postgresql", db)
 
-	goquWhere := goqu.Ex{
-		"is_active": true,
-	}
+	goquWhere := goqu.Ex{"is_active": true}
 	for k, v := range filterBy {
 		goquWhere[k] = v
 	}
 
 	goquSQL := database.
 		From("invoice").
-		Select(
-			goqu.C("id"),
-			goqu.C("reference_year"),
-			goqu.C("reference_month"),
-			goqu.C("document"),
-			goqu.C("description"),
-			goqu.C("amount"),
-			goqu.C("is_active"),
-			goqu.C("created_at"),
-			goqu.C("deactivated_at")).
 		Where(goquWhere)
 
 	// Counting rows
@@ -54,9 +43,7 @@ func (repo *invoiceRepository) GetMany(itemsPerPage int, page int, filterBy map[
 		return nil, count, err
 	}
 
-	goquSQL = goquSQL.
-		Limit(uint(itemsPerPage)).
-		Offset(uint(itemsPerPage * (page - 1)))
+	goquSQL = goquSQL.Limit(uint(itemsPerPage)).Offset(uint(itemsPerPage * (page - 1)))
 
 	for k, descend := range sortBy {
 		if descend {
@@ -76,10 +63,10 @@ func (repo *invoiceRepository) GetMany(itemsPerPage int, page int, filterBy map[
 	}
 
 	defer rows.Close()
-	invoices := []invoice.Invoice{}
+	invoices := []domain.Invoice{}
 
 	for rows.Next() {
-		var invoice invoice.Invoice
+		var invoice domain.Invoice
 		err = rows.Scan(
 			&invoice.ID,
 			&invoice.ReferenceYear,
@@ -102,7 +89,7 @@ func (repo *invoiceRepository) GetMany(itemsPerPage int, page int, filterBy map[
 }
 
 // Get tries to find an Invoice, given its Id
-func (repo *invoiceRepository) Get(id int) (*invoice.Invoice, error) {
+func (repo *invoiceRepository) Get(id int) (*domain.Invoice, error) {
 	db := pgsql.CreateConnection()
 	defer db.Close()
 	database := goqu.New("postgresql", db)
@@ -112,19 +99,7 @@ func (repo *invoiceRepository) Get(id int) (*invoice.Invoice, error) {
 		"id":        id,
 	}
 
-	goquSQL := database.
-		From("invoice").
-		Select(
-			goqu.C("id"),
-			goqu.C("reference_year"),
-			goqu.C("reference_month"),
-			goqu.C("document"),
-			goqu.C("description"),
-			goqu.C("amount"),
-			goqu.C("is_active"),
-			goqu.C("created_at"),
-			goqu.C("deactivated_at")).
-		Where(goquWhere)
+	goquSQL := database.From("invoice").Where(goquWhere)
 
 	count, err := goquSQL.Count()
 	if count < 1 {
@@ -132,7 +107,7 @@ func (repo *invoiceRepository) Get(id int) (*invoice.Invoice, error) {
 	}
 
 	sql, _, _ := goquSQL.ToSQL()
-	var invoice invoice.Invoice
+	var invoice domain.Invoice
 
 	err = database.QueryRow(sql).Scan(
 		&invoice.ID,
@@ -146,9 +121,37 @@ func (repo *invoiceRepository) Get(id int) (*invoice.Invoice, error) {
 		&invoice.DeactivatedAt)
 
 	if err != nil {
-
 		log.Printf("Unable to fetch invoices. %v", err)
 		return nil, err
 	}
 	return &invoice, nil
+}
+
+// Add tries to create a new Invoice
+func (repo *invoiceRepository) Add(invoice domain.Invoice) (int, error) {
+	db := pgsql.CreateConnection()
+	defer db.Close()
+	database := goqu.New("postgresql", db)
+
+	record := goqu.Record{
+		"reference_year":  invoice.ReferenceYear,
+		"reference_month": invoice.ReferenceMonth,
+		"document":        invoice.Document,
+		"description":     invoice.Description,
+		"amount":          invoice.Amount,
+		"is_active":       invoice.IsActive,
+		"created_at":      invoice.CreatedAt,
+		"deactivated_at":  invoice.DeactivatedAt,
+	}
+
+	goquSQL := database.From("invoice").Insert().Rows(record).Returning("id")
+	sql, _, _ := goquSQL.ToSQL()
+	var id int
+
+	err := database.QueryRow(sql).Scan(&id)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return id, err
 }
