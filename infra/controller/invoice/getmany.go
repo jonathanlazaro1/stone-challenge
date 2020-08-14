@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/jonathanlazaro1/stone-challenge/domain/invoice"
 	"github.com/jonathanlazaro1/stone-challenge/infra/service"
 )
 
@@ -14,6 +15,11 @@ const errParsingPageNumber = "Error parsing page number"
 const errParsingItemsPerPage = "Error parsing items per page"
 const errMaxItemsPerPageAllowed = "Max items per page allowed: %v"
 const errParsingSortParams = "Error parsing sort params"
+
+type getManyResult struct {
+	Items      []invoice.Invoice `json:"items"`
+	TotalItems int64             `json:"totalItems"`
+}
 
 // GetManyHandler returns an array of Invoices
 func GetManyHandler(w http.ResponseWriter, r *http.Request) {
@@ -42,10 +48,9 @@ func GetManyHandler(w http.ResponseWriter, r *http.Request) {
 	service := service.BuildInvoiceService()
 
 	filterBy := parseFilterByToMap(pathParams)
-
 	sortBy := parseSortByToMap(pathParams)
 
-	invoices, err := service.GetMany(itemsPerPage, page, filterBy, sortBy)
+	invoices, total, err := service.GetMany(itemsPerPage, page, filterBy, sortBy)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -54,5 +59,9 @@ func GetManyHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(invoices)
+	json.NewEncoder(w).Encode(getManyResult{
+		Items:      invoices,
+		TotalItems: total,
+	})
+	return
 }

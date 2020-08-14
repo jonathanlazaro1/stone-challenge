@@ -21,14 +21,12 @@ func GetInvoiceRepository() repository.Invoice {
 	return &invoiceRepository{}
 }
 
-// GetMany fetches all invoices found on DB table invoice, according to the parameters given
-func (repo *invoiceRepository) GetMany(itemsPerPage int, page int, filterBy map[string]string, sortBy map[string]bool) ([]invoice.Invoice, error) {
+// GetMany fetches all invoices found on DB table invoice, according to the parameters given. It also returns the total count for the query made
+func (repo *invoiceRepository) GetMany(itemsPerPage int, page int, filterBy map[string]string, sortBy map[string]bool) ([]invoice.Invoice, int64, error) {
 	db := pgsql.CreateConnection()
 	defer db.Close()
+	database := goqu.New("postgresql", db)
 
-	invoices := []invoice.Invoice{}
-
-	dialect := goqu.Dialect("postgres")
 	goquWhere := goqu.Ex{
 		"is_active": true,
 	}
@@ -36,7 +34,8 @@ func (repo *invoiceRepository) GetMany(itemsPerPage int, page int, filterBy map[
 		goquWhere[k] = v
 	}
 
-	goquSQL := dialect.From("invoice").
+	goquSQL := database.
+		From("invoice").
 		Select(
 			goqu.C("id"),
 			goqu.C("reference_year"),
@@ -47,9 +46,18 @@ func (repo *invoiceRepository) GetMany(itemsPerPage int, page int, filterBy map[
 			goqu.C("is_active"),
 			goqu.C("created_at"),
 			goqu.C("deactivated_at")).
-		Limit(uint(itemsPerPage)).
-		Offset(uint(itemsPerPage * (page - 1))).
 		Where(goquWhere)
+
+	// Counting rows
+	count, err := goquSQL.Count()
+	if err != nil {
+		log.Printf("Unable to fetch invoices. %v", err)
+		return nil, count, err
+	}
+
+	goquSQL = goquSQL.
+		Limit(uint(itemsPerPage)).
+		Offset(uint(itemsPerPage * (page - 1)))
 
 	for k, descend := range sortBy {
 		if descend {
@@ -62,13 +70,15 @@ func (repo *invoiceRepository) GetMany(itemsPerPage int, page int, filterBy map[
 	sql, _, _ := goquSQL.ToSQL()
 	fmt.Println(sql)
 
-	rows, err := db.Query(sql)
+	rows, err := database.Query(sql)
 
 	if err != nil {
 		log.Printf("Unable to fetch invoices. %v", err)
+		return nil, count, err
 	}
 
 	defer rows.Close()
+	invoices := []invoice.Invoice{}
 
 	for rows.Next() {
 		var invoice invoice.Invoice
@@ -85,10 +95,10 @@ func (repo *invoiceRepository) GetMany(itemsPerPage int, page int, filterBy map[
 
 		if err != nil {
 			log.Printf("Unable to fetch invoices. %v", err)
-			return nil, err
+			return nil, count, err
 		}
 
 		invoices = append(invoices, invoice)
 	}
-	return invoices, err
+	return invoices, count, err
 }
