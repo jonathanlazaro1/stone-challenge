@@ -7,6 +7,11 @@ import (
 
 // addInvoiceHandler tells a mux.Router how to handle requests to /invoice
 func addInvoiceHandler(r *mux.Router) {
-	r.HandleFunc("/", invoice.GetManyHandler).Methods("GET", "OPTIONS")
+	// Mux demands registering routes with and without trailing slash, so... yeah
+	r.Methods("GET", "OPTIONS").Path("/").PathPrefix("").HandlerFunc(invoice.GetManyHandler)
+
 	r.HandleFunc("/{id:[0-9]+}", invoice.GetHandler).Methods("GET", "OPTIONS")
+
+	// Same as above
+	r.Methods("POST", "OPTIONS").Path("/").PathPrefix("").HandlerFunc(invoice.PostHandler)
 }
