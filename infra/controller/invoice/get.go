@@ -11,6 +11,7 @@ import (
 )
 
 const errInvoiceNotFound = "Couldn't find invoice"
+const errCouldntParseInvoiceID = "Couldn't parse invoice Id"
 
 // GetHandler handles a request to an Invoice by its id
 func GetHandler(w http.ResponseWriter, r *http.Request) {
@@ -19,7 +20,7 @@ func GetHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		io.WriteString(w, errInvoiceNotFound)
+		io.WriteString(w, errCouldntParseInvoiceID)
 		return
 	}
 
