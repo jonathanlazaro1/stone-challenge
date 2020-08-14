@@ -14,4 +14,6 @@ func addInvoiceHandler(r *mux.Router) {
 
 	// Same as above
 	r.Methods("POST", "OPTIONS").Path("/").PathPrefix("").HandlerFunc(invoice.PostHandler)
+
+	r.HandleFunc("/{id:[0-9]+}", invoice.PutHandler).Methods("PUT", "OPTIONS")
 }
