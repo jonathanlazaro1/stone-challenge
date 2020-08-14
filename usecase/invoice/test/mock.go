@@ -6,21 +6,26 @@ import (
 	"github.com/jonathanlazaro1/stone-challenge/helpers"
 
 	"github.com/brianvoe/gofakeit/v5"
-	in "github.com/jonathanlazaro1/stone-challenge/domain/invoice"
+	domain "github.com/jonathanlazaro1/stone-challenge/domain/invoice"
 	rp "github.com/jonathanlazaro1/stone-challenge/usecase/invoice/repository"
 )
 
 type mockedInvoiceRepository struct {
-	invoices []in.Invoice
+	invoices []domain.Invoice
 }
 
-func (mp *mockedInvoiceRepository) GetMany(itemsPerPage int, page int, filterBy map[string]string, sortBy map[string]bool) ([]in.Invoice, int64, error) {
+func (mp *mockedInvoiceRepository) GetMany(itemsPerPage int, page int, filterBy map[string]string, sortBy map[string]bool) ([]domain.Invoice, int64, error) {
 	newInvoices := append(mp.invoices[:0], mp.invoices[:itemsPerPage]...)
 	return newInvoices, int64(len(mp.invoices)), nil
 }
 
-func (mp *mockedInvoiceRepository) Get(id int) (*in.Invoice, error) {
+func (mp *mockedInvoiceRepository) Get(id int) (*domain.Invoice, error) {
 	return &mp.invoices[0], nil
+}
+
+func (mp *mockedInvoiceRepository) Add(invoice domain.Invoice) (int, error) {
+	mp.invoices = append(mp.invoices, invoice)
+	return len(mp.invoices), nil
 }
 
 // MockInvoiceRepository creates a mocked implementation of an InvoiceRepository
@@ -34,8 +39,8 @@ func MockInvoiceRepository(size int) rp.Invoice {
 }
 
 // MakeFakeInvoice generates a pointer to an Invoice with fake populated data
-func MakeFakeInvoice() in.Invoice {
-	in := in.NewInvoice()
+func MakeFakeInvoice() domain.Invoice {
+	in := domain.NewInvoice()
 	in.ID = gofakeit.Number(1, 100000)
 
 	currYear := time.Now().Year()
