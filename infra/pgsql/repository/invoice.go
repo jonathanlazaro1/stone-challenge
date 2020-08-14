@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/doug-martin/goqu/v9"
@@ -68,7 +67,6 @@ func (repo *invoiceRepository) GetMany(itemsPerPage int, page int, filterBy map[
 	}
 
 	sql, _, _ := goquSQL.ToSQL()
-	fmt.Println(sql)
 
 	rows, err := database.Query(sql)
 
@@ -101,4 +99,56 @@ func (repo *invoiceRepository) GetMany(itemsPerPage int, page int, filterBy map[
 		invoices = append(invoices, invoice)
 	}
 	return invoices, count, err
+}
+
+// Get tries to find an Invoice, given its Id
+func (repo *invoiceRepository) Get(id int) (*invoice.Invoice, error) {
+	db := pgsql.CreateConnection()
+	defer db.Close()
+	database := goqu.New("postgresql", db)
+
+	goquWhere := goqu.Ex{
+		"is_active": true,
+		"id":        id,
+	}
+
+	goquSQL := database.
+		From("invoice").
+		Select(
+			goqu.C("id"),
+			goqu.C("reference_year"),
+			goqu.C("reference_month"),
+			goqu.C("document"),
+			goqu.C("description"),
+			goqu.C("amount"),
+			goqu.C("is_active"),
+			goqu.C("created_at"),
+			goqu.C("deactivated_at")).
+		Where(goquWhere)
+
+	count, err := goquSQL.Count()
+	if count < 1 {
+		return nil, nil
+	}
+
+	sql, _, _ := goquSQL.ToSQL()
+	var invoice invoice.Invoice
+
+	err = database.QueryRow(sql).Scan(
+		&invoice.ID,
+		&invoice.ReferenceYear,
+		&invoice.ReferenceMonth,
+		&invoice.Document,
+		&invoice.Description,
+		&invoice.Amount,
+		&invoice.IsActive,
+		&invoice.CreatedAt,
+		&invoice.DeactivatedAt)
+
+	if err != nil {
+
+		log.Printf("Unable to fetch invoices. %v", err)
+		return nil, err
+	}
+	return &invoice, nil
 }
