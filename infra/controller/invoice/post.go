@@ -16,6 +16,7 @@ const errCouldntParsePostModel = "Couldn't parse invoice"
 
 // PostModel represents an Invoice model to be persisted to an Invoice
 type PostModel struct {
+	id             int
 	ReferenceYear  int     `json:"referenceYear"`
 	ReferenceMonth int     `json:"referenceMonth"`
 	Document       string  `json:"document"`
@@ -42,6 +43,7 @@ func (m PostModel) ToInvoice() domain.Invoice {
 	invoice.Document = m.Document
 	invoice.Description = m.Description
 	invoice.Amount = m.Amount
+	invoice.ID = m.id
 
 	return invoice
 }
