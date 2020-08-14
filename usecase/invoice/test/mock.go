@@ -15,9 +15,12 @@ type mockedInvoiceRepository struct {
 }
 
 func (mp *mockedInvoiceRepository) GetMany(itemsPerPage int, page int, filterBy map[string]string, sortBy map[string]bool) ([]in.Invoice, int64, error) {
-
 	newInvoices := append(mp.invoices[:0], mp.invoices[:itemsPerPage]...)
 	return newInvoices, int64(len(mp.invoices)), nil
+}
+
+func (mp *mockedInvoiceRepository) Get(id int) (*in.Invoice, error) {
+	return &mp.invoices[0], nil
 }
 
 // MockInvoiceRepository creates a mocked implementation of an InvoiceRepository

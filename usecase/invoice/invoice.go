@@ -21,3 +21,8 @@ func NewInteractor(invoiceRepository repository.Invoice) *Interactor {
 func (interactor *Interactor) GetMany(itemsPerPage int, page int, filterBy map[string]string, sortBy map[string]bool) ([]di.Invoice, int64, error) {
 	return interactor.repository.GetMany(itemsPerPage, page, filterBy, sortBy)
 }
+
+// Get an Invoice, given its Id
+func (interactor *Interactor) Get(id int) (*di.Invoice, error) {
+	return interactor.repository.Get(id)
+}

@@ -7,4 +7,5 @@ import (
 // Invoice repository specifies which declarations Invoice repositories should implement
 type Invoice interface {
 	GetMany(itemsPerPage int, page int, filterBy map[string]string, sortBy map[string]bool) ([]invoice.Invoice, int64, error)
+	Get(id int) (*invoice.Invoice, error)
 }
