@@ -88,7 +88,7 @@ func (repo *invoiceRepository) GetMany(itemsPerPage int, page int, filterBy map[
 	return invoices, count, err
 }
 
-// Get tries to find an Invoice, given its Id
+// Get finds an Invoice, given its Id
 func (repo *invoiceRepository) Get(id int) (*domain.Invoice, error) {
 	db := pgsql.CreateConnection()
 	defer db.Close()
@@ -127,7 +127,7 @@ func (repo *invoiceRepository) Get(id int) (*domain.Invoice, error) {
 	return &invoice, nil
 }
 
-// Add tries to create a new Invoice
+// Add creates a new Invoice on DB
 func (repo *invoiceRepository) Add(invoice domain.Invoice) (int, error) {
 	db := pgsql.CreateConnection()
 	defer db.Close()
@@ -154,4 +154,43 @@ func (repo *invoiceRepository) Add(invoice domain.Invoice) (int, error) {
 	}
 
 	return id, err
+}
+
+// Update updates an existent Invoice on DB
+func (repo *invoiceRepository) Update(invoice domain.Invoice) (int64, error) {
+	db := pgsql.CreateConnection()
+	defer db.Close()
+	database := goqu.New("postgresql", db)
+
+	record := goqu.Record{
+		"reference_year":  invoice.ReferenceYear,
+		"reference_month": invoice.ReferenceMonth,
+		"document":        invoice.Document,
+		"description":     invoice.Description,
+		"amount":          invoice.Amount,
+		"is_active":       invoice.IsActive,
+		"created_at":      invoice.CreatedAt,
+		"deactivated_at":  invoice.DeactivatedAt,
+	}
+
+	goquSQL := database.From("invoice").
+		Where(goqu.Ex{"id": invoice.ID}).
+		Update().
+		Set(record)
+	sql, _, _ := goquSQL.ToSQL()
+
+	var rowsAffected int64 = -1
+
+	res, err := database.Exec(sql)
+	if err != nil {
+		fmt.Println(err)
+		return rowsAffected, err
+	}
+
+	rowsAffected, err = res.RowsAffected()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return rowsAffected, err
 }
