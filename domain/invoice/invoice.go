@@ -6,6 +6,9 @@ import (
 	"time"
 )
 
+// TODO: remove SQLNullTime things away from domain
+// TODO: guarantee UTC time output
+
 // JSONNullTime represents a time.Time type that can be null
 type JSONNullTime struct {
 	sql.NullTime
@@ -21,15 +24,15 @@ func (v JSONNullTime) MarshalJSON() ([]byte, error) {
 
 // Invoice represents an Invoice entity. A new Invoice must be obtained by using NewInvoice method
 type Invoice struct {
-	ID             int
-	ReferenceMonth int
-	ReferenceYear  int
-	Document       string
-	Description    string
-	Amount         float64
-	IsActive       bool
-	CreatedAt      time.Time
-	DeactivatedAt  JSONNullTime
+	ID             int          `json:"id"`
+	ReferenceMonth int          `json:"referenceMonth"`
+	ReferenceYear  int          `json:"referenceYear"`
+	Document       string       `json:"document"`
+	Description    string       `json:"description"`
+	Amount         float64      `json:"amount"`
+	IsActive       bool         `json:"isActive"`
+	CreatedAt      time.Time    `json:"createdAt"`
+	DeactivatedAt  JSONNullTime `json:"deactivatedAt"`
 }
 
 // NewInvoice creates a new instance of an Invoice
