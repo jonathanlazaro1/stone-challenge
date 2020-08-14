@@ -12,6 +12,8 @@ import (
 	"github.com/jonathanlazaro1/stone-challenge/infra/service"
 )
 
+const errCouldntParsePostModel = "Couldn't parse invoice"
+
 // PostModel represents an Invoice model to be persisted to an Invoice
 type PostModel struct {
 	ReferenceYear  int     `json:"referenceYear"`
@@ -50,7 +52,7 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&model)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		io.WriteString(w, "Couldn't parse invoice")
+		io.WriteString(w, errCouldntParsePostModel)
 		return
 	}
 
