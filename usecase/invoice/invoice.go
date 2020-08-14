@@ -31,3 +31,8 @@ func (interactor *Interactor) Get(id int) (*domain.Invoice, error) {
 func (interactor *Interactor) Add(invoice domain.Invoice) (int, error) {
 	return interactor.repository.Add(invoice)
 }
+
+// Update gives new values to an existent Invoice
+func (interactor *Interactor) Update(invoice domain.Invoice) (int64, error) {
+	return interactor.repository.Update(invoice)
+}

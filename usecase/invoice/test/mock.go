@@ -28,6 +28,11 @@ func (mp *mockedInvoiceRepository) Add(invoice domain.Invoice) (int, error) {
 	return len(mp.invoices), nil
 }
 
+func (mp *mockedInvoiceRepository) Update(invoice domain.Invoice) (int64, error) {
+	mp.invoices = append(mp.invoices, invoice)
+	return int64(len(mp.invoices)), nil
+}
+
 // MockInvoiceRepository creates a mocked implementation of an InvoiceRepository
 func MockInvoiceRepository(size int) rp.Invoice {
 	repo := &mockedInvoiceRepository{}
