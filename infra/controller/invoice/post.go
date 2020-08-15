@@ -31,7 +31,7 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 
 	service := service.BuildInvoiceService()
 
-	id, err := service.Add(model.ToInvoice())
+	id, err := service.Add(model.ToInvoice(nil))
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		io.WriteString(w, "Couldn't create Invoice")

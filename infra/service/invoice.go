@@ -2,8 +2,8 @@ package service
 
 import (
 	validation "github.com/go-ozzo/ozzo-validation"
-	"github.com/jinzhu/copier"
 	domain "github.com/jonathanlazaro1/stone-challenge/domain/invoice"
+	"github.com/jonathanlazaro1/stone-challenge/helpers"
 	"github.com/jonathanlazaro1/stone-challenge/infra/pgsql/repository"
 	"github.com/jonathanlazaro1/stone-challenge/usecase/invoice"
 	uc "github.com/jonathanlazaro1/stone-challenge/usecase/invoice"
@@ -30,15 +30,19 @@ func (m PostModel) Validate() error {
 }
 
 // ToInvoice converts a PostModel to an Invoice instance
-func (m PostModel) ToInvoice() domain.Invoice {
-	invoice := domain.NewInvoice()
-	invoice.ReferenceYear = *m.ReferenceYear
-	invoice.ReferenceMonth = *m.ReferenceMonth
-	invoice.Document = *m.Document
-	invoice.Description = *m.Description
-	invoice.Amount = *m.Amount
+func (m PostModel) ToInvoice(invoiceToMerge *domain.Invoice) domain.Invoice {
+	if invoiceToMerge == nil {
+		invoice := domain.NewInvoice()
+		invoice.ReferenceYear = *m.ReferenceYear
+		invoice.ReferenceMonth = *m.ReferenceMonth
+		invoice.Document = *m.Document
+		invoice.Description = *m.Description
+		invoice.Amount = *m.Amount
 
-	return invoice
+		return invoice
+	}
+	helpers.CopyIfNotNil(&m, invoiceToMerge)
+	return *invoiceToMerge
 }
 
 // BuildInvoiceService builds a new InvoiceInteractor with the specified repository
@@ -59,10 +63,9 @@ func Put(id int, postModel PostModel) (*domain.Invoice, error) {
 	} else if currentInvoice == nil {
 		return nil, nil
 	}
+	updatedInvoice := postModel.ToInvoice(currentInvoice)
 
-	copier.Copy(&currentInvoice, &postModel)
-
-	rowCount, err := service.Update(*currentInvoice)
+	rowCount, err := service.Update(updatedInvoice)
 	if err != nil {
 		return nil, err
 	} else if rowCount < 1 {
