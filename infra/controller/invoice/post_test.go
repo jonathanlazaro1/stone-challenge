@@ -15,13 +15,20 @@ const verb = "POST"
 const endpoint = "/api/v1/invoice"
 
 func makeInvoicePostModel() service.PostModel {
-	return service.PostModel{
-		ReferenceMonth: 8,
-		ReferenceYear:  2020,
-		Document:       "202008001",
-		Description:    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus vitae tortor mi. Fusce lobortis sed est eu sollicitudin. Vestibulum et eleifend neque, sed laoreet magna. Suspendisse ut molestie nisl.",
-		Amount:         1.45,
-	}
+	description := "The old description"
+	refYear := 2020
+	refMonth := 8
+	doc := "current doc"
+	amount := 2.42
+
+	model := service.PostModel{}
+	model.ReferenceYear = &refYear
+	model.ReferenceMonth = &refMonth
+	model.Document = &doc
+	model.Description = &description
+	model.Amount = &amount
+
+	return model
 }
 
 func TestInvoicePost(t *testing.T) {
