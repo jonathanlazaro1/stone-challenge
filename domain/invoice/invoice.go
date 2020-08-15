@@ -43,3 +43,9 @@ func NewInvoice() Invoice {
 
 	return *i
 }
+
+// Deactivate makes an Invoice inactive. It also sets the current UTC date/time of deactivation
+func (invoice *Invoice) Deactivate() {
+	invoice.IsActive = false
+	invoice.DeactivatedAt.Time = time.Now().UTC()
+}

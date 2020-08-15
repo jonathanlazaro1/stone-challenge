@@ -36,3 +36,9 @@ func (interactor *Interactor) Add(invoice domain.Invoice) (int, error) {
 func (interactor *Interactor) Update(invoice domain.Invoice) (int64, error) {
 	return interactor.repository.Update(invoice)
 }
+
+// Delete deactivates the current Invoice
+func (interactor *Interactor) Delete(invoice domain.Invoice) (int64, error) {
+	invoice.Deactivate()
+	return interactor.repository.Update(invoice)
+}
