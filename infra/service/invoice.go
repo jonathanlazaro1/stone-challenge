@@ -78,3 +78,27 @@ func Put(id int, postModel PostModel) (*domain.Invoice, error) {
 	}
 	return currentInvoice, nil
 }
+
+// Delete makes an Invoice inactive, which makes it unable to be retrieved/maintained
+func Delete(id int) (bool, error) {
+	service := BuildInvoiceService()
+	invoice, err := service.Get(id)
+	if err != nil {
+		return false, err
+	} else if invoice == nil {
+		return false, nil
+	}
+
+	rowCount, err := service.Delete(*invoice)
+	if err != nil {
+		return false, err
+	} else if rowCount < 1 {
+		return false, nil
+	}
+
+	invoice, err = service.Get(id)
+	if err != nil {
+		return false, err
+	}
+	return invoice == nil, nil
+}

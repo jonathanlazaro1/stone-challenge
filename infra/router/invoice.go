@@ -18,4 +18,6 @@ func addInvoiceHandler(r *mux.Router) {
 	r.HandleFunc("/{id:[0-9]+}", invoice.UpdateHandler).Methods("PUT", "OPTIONS")
 
 	r.HandleFunc("/{id:[0-9]+}", invoice.UpdateHandler).Methods("PATCH", "OPTIONS")
+
+	r.HandleFunc("/{id:[0-9]+}", invoice.DeleteHandler).Methods("DELETE", "OPTIONS")
 }
