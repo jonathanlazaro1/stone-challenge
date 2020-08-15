@@ -23,15 +23,13 @@ func PutHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var model PostModel
+	var model service.PostModel
 	err = json.NewDecoder(r.Body).Decode(&model)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		io.WriteString(w, errCouldntParsePostModel)
 		return
 	}
-
-	model.id = id
 
 	err = model.Validate()
 	if err != nil {
@@ -40,16 +38,12 @@ func PutHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	service := service.BuildInvoiceService()
-
-	rowsAffected, err := service.Update(model.ToInvoice())
+	newInvoice, err := service.Put(id, model)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		io.WriteString(w, "Couldn't update Invoice")
 		return
-	}
-
-	if rowsAffected < 1 {
+	} else if newInvoice == nil {
 		w.WriteHeader(http.StatusNotFound)
 		io.WriteString(w, errInvoiceNotFound)
 		return

@@ -7,13 +7,15 @@ import (
 	"net/http/httptest"
 	"strconv"
 	"testing"
+
+	"github.com/jonathanlazaro1/stone-challenge/infra/service"
 )
 
 const verb = "POST"
 const endpoint = "/api/v1/invoice"
 
-func makeInvoicePostModel() PostModel {
-	return PostModel{
+func makeInvoicePostModel() service.PostModel {
+	return service.PostModel{
 		ReferenceMonth: 8,
 		ReferenceYear:  2020,
 		Document:       "202008001",
