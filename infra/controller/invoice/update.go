@@ -12,8 +12,8 @@ import (
 	"github.com/jonathanlazaro1/stone-challenge/infra/service"
 )
 
-// PutHandler handles a request to put an Invoice
-func PutHandler(w http.ResponseWriter, r *http.Request) {
+// UpdateHandler handles a request to put or patch an Invoice
+func UpdateHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 
@@ -31,11 +31,13 @@ func PutHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = model.Validate()
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		io.WriteString(w, fmt.Sprint(err))
-		return
+	if r.Method == "PUT" {
+		err = model.Validate()
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			io.WriteString(w, fmt.Sprint(err))
+			return
+		}
 	}
 
 	newInvoice, err := service.Put(id, model)
@@ -49,5 +51,5 @@ func PutHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusNoContent)
 }
