@@ -11,11 +11,11 @@ import (
 
 // PostModel represents an Invoice model to be persisted to an Invoice
 type PostModel struct {
-	ReferenceYear  int     `json:"referenceYear,omitempty"`
-	ReferenceMonth int     `json:"referenceMonth,omitempty"`
-	Document       string  `json:"document,omitempty"`
-	Description    string  `json:"description,omitempty"`
-	Amount         float64 `json:"amount,omitempty"`
+	ReferenceYear  *int     `json:"referenceYear,omitempty"`
+	ReferenceMonth *int     `json:"referenceMonth,omitempty"`
+	Document       *string  `json:"document,omitempty"`
+	Description    *string  `json:"description,omitempty"`
+	Amount         *float64 `json:"amount,omitempty"`
 }
 
 // Validate verifies if a InvoicePostModel has valid data.
@@ -32,11 +32,11 @@ func (m PostModel) Validate() error {
 // ToInvoice converts a PostModel to an Invoice instance
 func (m PostModel) ToInvoice() domain.Invoice {
 	invoice := domain.NewInvoice()
-	invoice.ReferenceYear = m.ReferenceYear
-	invoice.ReferenceMonth = m.ReferenceMonth
-	invoice.Document = m.Document
-	invoice.Description = m.Description
-	invoice.Amount = m.Amount
+	invoice.ReferenceYear = *m.ReferenceYear
+	invoice.ReferenceMonth = *m.ReferenceMonth
+	invoice.Document = *m.Document
+	invoice.Description = *m.Description
+	invoice.Amount = *m.Amount
 
 	return invoice
 }
