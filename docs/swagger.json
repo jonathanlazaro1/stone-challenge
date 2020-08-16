@@ -1,0 +1,580 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "An API that takes care of Invoices",
+        "title": "Invoice API",
+        "contact": {
+            "name": "Jonathan Lazaro",
+            "email": "jonathan.lazaro1@gmail.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://github.com/jonathanlazaro1/stone-challenge/blob/master/LICENSE"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api/v1",
+    "paths": {
+        "/auth": {
+            "get": {
+                "security": [
+                    {
+                        "JwtAuth": []
+                    }
+                ],
+                "description": "Get authentication info, according to the token passed in the request header.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Get authentication Info",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/authentication.AuthInfo"
+                        }
+                    },
+                    "401": {
+                        "description": "Indicates that no authorization info was provided, or authorization is invalid.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Indicates an error that was not handled by the server",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Generates a JWT token that can be used to consume Invoice endpoints.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Authenticate",
+                "parameters": [
+                    {
+                        "description": "Auth Model. All fields are required.",
+                        "name": "authInfo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.AuthModel"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The JWT token that has been generated",
+                        "schema": {
+                            "$ref": "#/definitions/authentication.TokenResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Indicates a failure when parsing request body or a validation error, e.g. a required field is missing",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Indicates an error that was not handled by the server",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/invoice": {
+            "get": {
+                "security": [
+                    {
+                        "JwtAuth": []
+                    }
+                ],
+                "description": "Fetch invoices according to query. Only active invoices can be fetched.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "invoices"
+                ],
+                "summary": "List invoices",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 50,
+                        "description": "Number of items per page",
+                        "name": "itemsperpage",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page to fetch, given a number of items per page",
+                        "name": "p",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter results by one or more of comma-separated queries. A query has the following structure: [filter_name]:[value]. Possible filters are: Reference Year = value (reference_year:value), Reference Month = value (reference_month:value) and Document contains value (document:value). Queries are inclusive.",
+                        "name": "filter",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort results by one or more of comma-separated sort items. A sort item has the sort field name, followed by (optionally) a boolean indicating if the sort is in descending order. Sort items have the following structure: [sort_name]:[descending]. Possible sort fields are: Reference Year (reference_year:bool), Reference Month (reference_month:bool) and Document (document:bool). Sorts are inclusive.",
+                        "name": "sort",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns an object with the items found, among an integer indicating the total number of items for the query made.",
+                        "schema": {
+                            "$ref": "#/definitions/invoice.getManyResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Indicates a failure when parsing query params, or a itemsperpage query param greater than max value",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Indicates that no authorization info was provided, or authorization is invalid.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Indicates an error that was not handled by the server",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "JwtAuth": []
+                    }
+                ],
+                "description": "Creates an invoice using the values supplied on the request body.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "invoices"
+                ],
+                "summary": "New Invoice",
+                "parameters": [
+                    {
+                        "description": "Post Invoice Model. All fields are required.",
+                        "name": "invoice",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.PostModel"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "The new invoice Id",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "Indicates a failure when parsing request body or a validation error, e.g. a required field is missing",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Indicates that no authorization info was provided, or authorization is invalid.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Indicates an error that was not handled by the server",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/invoice/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "JwtAuth": []
+                    }
+                ],
+                "description": "Get an invoice, given its Id. Only an active Invoice can be fetched.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "invoices"
+                ],
+                "summary": "Get an invoice",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id of the invoice to fetch",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/invoice.Invoice"
+                        }
+                    },
+                    "400": {
+                        "description": "Indicates a failure when parsing invoice Id",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Indicates that no authorization info was provided, or authorization is invalid.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Indicates that no Invoice with given Id was found, or Invoice is deactivated",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Indicates an error that was not handled by the server",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "JwtAuth": []
+                    }
+                ],
+                "description": "Updates an Invoice under the supplied Id. All values on the Invoice will be updated.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "invoices"
+                ],
+                "summary": "Update Invoice",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id of the invoice to update",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update Invoice Model. All fields are required.",
+                        "name": "invoice",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.PostModel"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Invoice was successfully updated."
+                    },
+                    "400": {
+                        "description": "Indicates a failure when parsing Invoice Id|request body or a validation error, e.g. a required field is missing",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Indicates that no authorization info was provided, or authorization is invalid.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Indicates that no Invoice with given Id was found, or Invoice is deactivated",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Indicates an error that was not handled by the server",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "JwtAuth": []
+                    }
+                ],
+                "description": "Deactivates an Invoice, which means it will still exist on the server, but won't be capable of being retrieved|updated anymore.",
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "invoices"
+                ],
+                "summary": "Delete Invoice",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id of the invoice to delete",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Invoice was successfully deleted."
+                    },
+                    "400": {
+                        "description": "Indicates a failure when parsing Invoice Id.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Indicates that no Invoice with given Id was found, or Invoice is deactivated",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Indicates an error that was not handled by the server",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "JwtAuth": []
+                    }
+                ],
+                "description": "Updates an Invoice under the supplied Id. Only the supplied field values will be applied to the Invoice.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "invoices"
+                ],
+                "summary": "Update Invoice",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id of the invoice to update",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update Invoice Model. All fields are optional.",
+                        "name": "invoice",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.PostModel"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Invoice was successfully updated."
+                    },
+                    "400": {
+                        "description": "Indicates a failure when parsing Invoice Id|request body.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Indicates that no authorization info was provided, or authorization is invalid.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Indicates that no Invoice with given Id was found, or Invoice is deactivated",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Indicates an error that was not handled by the server",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "authentication.AuthInfo": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "authentication.TokenResponse": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "invoice.Invoice": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number",
+                    "format": "float"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "deactivatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "document": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "isActive": {
+                    "type": "boolean"
+                },
+                "referenceMonth": {
+                    "type": "integer"
+                },
+                "referenceYear": {
+                    "type": "integer"
+                }
+            }
+        },
+        "invoice.getManyResult": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/invoice.Invoice"
+                    }
+                },
+                "totalItems": {
+                    "type": "integer"
+                }
+            }
+        },
+        "service.AuthModel": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.PostModel": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "document": {
+                    "type": "string"
+                },
+                "referenceMonth": {
+                    "type": "integer"
+                },
+                "referenceYear": {
+                    "type": "integer"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "JwtAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "tags": [
+        {
+            "description": "Invoice related operations",
+            "name": "invoices"
+        },
+        {
+            "description": "Auth related operations",
+            "name": "auth"
+        }
+    ]
+}

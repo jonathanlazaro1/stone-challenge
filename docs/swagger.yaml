@@ -1,0 +1,374 @@
+basePath: /api/v1
+definitions:
+  authentication.AuthInfo:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+    type: object
+  authentication.TokenResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  invoice.Invoice:
+    properties:
+      amount:
+        format: float
+        type: number
+      createdAt:
+        format: date-time
+        type: string
+      deactivatedAt:
+        format: date-time
+        type: string
+      description:
+        type: string
+      document:
+        type: string
+      id:
+        type: integer
+      isActive:
+        type: boolean
+      referenceMonth:
+        type: integer
+      referenceYear:
+        type: integer
+    type: object
+  invoice.getManyResult:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/invoice.Invoice'
+        type: array
+      totalItems:
+        type: integer
+    type: object
+  service.AuthModel:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+    type: object
+  service.PostModel:
+    properties:
+      amount:
+        type: number
+      description:
+        type: string
+      document:
+        type: string
+      referenceMonth:
+        type: integer
+      referenceYear:
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: jonathan.lazaro1@gmail.com
+    name: Jonathan Lazaro
+  description: An API that takes care of Invoices
+  license:
+    name: MIT
+    url: https://github.com/jonathanlazaro1/stone-challenge/blob/master/LICENSE
+  title: Invoice API
+  version: "1.0"
+paths:
+  /auth:
+    get:
+      description: Get authentication info, according to the token passed in the request header.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/authentication.AuthInfo'
+        "401":
+          description: Indicates that no authorization info was provided, or authorization is invalid.
+          schema:
+            type: string
+        "500":
+          description: Indicates an error that was not handled by the server
+          schema:
+            type: string
+      security:
+      - JwtAuth: []
+      summary: Get authentication Info
+      tags:
+      - auth
+    post:
+      consumes:
+      - application/json
+      description: Generates a JWT token that can be used to consume Invoice endpoints.
+      parameters:
+      - description: Auth Model. All fields are required.
+        in: body
+        name: authInfo
+        required: true
+        schema:
+          $ref: '#/definitions/service.AuthModel'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: The JWT token that has been generated
+          schema:
+            $ref: '#/definitions/authentication.TokenResponse'
+        "400":
+          description: Indicates a failure when parsing request body or a validation error, e.g. a required field is missing
+          schema:
+            type: string
+        "500":
+          description: Indicates an error that was not handled by the server
+          schema:
+            type: string
+      summary: Authenticate
+      tags:
+      - auth
+  /invoice:
+    get:
+      description: Fetch invoices according to query. Only active invoices can be fetched.
+      parameters:
+      - default: 50
+        description: Number of items per page
+        in: query
+        name: itemsperpage
+        type: integer
+      - default: 1
+        description: Page to fetch, given a number of items per page
+        in: query
+        name: p
+        type: integer
+      - description: 'Filter results by one or more of comma-separated queries. A query has the following structure: [filter_name]:[value]. Possible filters are: Reference Year = value (reference_year:value), Reference Month = value (reference_month:value) and Document contains value (document:value). Queries are inclusive.'
+        in: query
+        name: filter
+        type: string
+      - description: 'Sort results by one or more of comma-separated sort items. A sort item has the sort field name, followed by (optionally) a boolean indicating if the sort is in descending order. Sort items have the following structure: [sort_name]:[descending]. Possible sort fields are: Reference Year (reference_year:bool), Reference Month (reference_month:bool) and Document (document:bool). Sorts are inclusive.'
+        in: query
+        name: sort
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Returns an object with the items found, among an integer indicating the total number of items for the query made.
+          schema:
+            $ref: '#/definitions/invoice.getManyResult'
+        "400":
+          description: Indicates a failure when parsing query params, or a itemsperpage query param greater than max value
+          schema:
+            type: string
+        "401":
+          description: Indicates that no authorization info was provided, or authorization is invalid.
+          schema:
+            type: string
+        "500":
+          description: Indicates an error that was not handled by the server
+          schema:
+            type: string
+      security:
+      - JwtAuth: []
+      summary: List invoices
+      tags:
+      - invoices
+    post:
+      consumes:
+      - application/json
+      description: Creates an invoice using the values supplied on the request body.
+      parameters:
+      - description: Post Invoice Model. All fields are required.
+        in: body
+        name: invoice
+        required: true
+        schema:
+          $ref: '#/definitions/service.PostModel'
+      produces:
+      - text/plain
+      responses:
+        "201":
+          description: The new invoice Id
+          schema:
+            type: integer
+        "400":
+          description: Indicates a failure when parsing request body or a validation error, e.g. a required field is missing
+          schema:
+            type: string
+        "401":
+          description: Indicates that no authorization info was provided, or authorization is invalid.
+          schema:
+            type: string
+        "500":
+          description: Indicates an error that was not handled by the server
+          schema:
+            type: string
+      security:
+      - JwtAuth: []
+      summary: New Invoice
+      tags:
+      - invoices
+  /invoice/{id}:
+    delete:
+      description: Deactivates an Invoice, which means it will still exist on the server, but won't be capable of being retrieved|updated anymore.
+      parameters:
+      - description: Id of the invoice to delete
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - text/plain
+      responses:
+        "204":
+          description: Invoice was successfully deleted.
+        "400":
+          description: Indicates a failure when parsing Invoice Id.
+          schema:
+            type: string
+        "404":
+          description: Indicates that no Invoice with given Id was found, or Invoice is deactivated
+          schema:
+            type: string
+        "500":
+          description: Indicates an error that was not handled by the server
+          schema:
+            type: string
+      security:
+      - JwtAuth: []
+      summary: Delete Invoice
+      tags:
+      - invoices
+    get:
+      description: Get an invoice, given its Id. Only an active Invoice can be fetched.
+      parameters:
+      - description: Id of the invoice to fetch
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/invoice.Invoice'
+        "400":
+          description: Indicates a failure when parsing invoice Id
+          schema:
+            type: string
+        "401":
+          description: Indicates that no authorization info was provided, or authorization is invalid.
+          schema:
+            type: string
+        "404":
+          description: Indicates that no Invoice with given Id was found, or Invoice is deactivated
+          schema:
+            type: string
+        "500":
+          description: Indicates an error that was not handled by the server
+          schema:
+            type: string
+      security:
+      - JwtAuth: []
+      summary: Get an invoice
+      tags:
+      - invoices
+    patch:
+      consumes:
+      - application/json
+      description: Updates an Invoice under the supplied Id. Only the supplied field values will be applied to the Invoice.
+      parameters:
+      - description: Id of the invoice to update
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update Invoice Model. All fields are optional.
+        in: body
+        name: invoice
+        required: true
+        schema:
+          $ref: '#/definitions/service.PostModel'
+      produces:
+      - text/plain
+      responses:
+        "204":
+          description: Invoice was successfully updated.
+        "400":
+          description: Indicates a failure when parsing Invoice Id|request body.
+          schema:
+            type: string
+        "401":
+          description: Indicates that no authorization info was provided, or authorization is invalid.
+          schema:
+            type: string
+        "404":
+          description: Indicates that no Invoice with given Id was found, or Invoice is deactivated
+          schema:
+            type: string
+        "500":
+          description: Indicates an error that was not handled by the server
+          schema:
+            type: string
+      security:
+      - JwtAuth: []
+      summary: Update Invoice
+      tags:
+      - invoices
+    put:
+      consumes:
+      - application/json
+      description: Updates an Invoice under the supplied Id. All values on the Invoice will be updated.
+      parameters:
+      - description: Id of the invoice to update
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update Invoice Model. All fields are required.
+        in: body
+        name: invoice
+        required: true
+        schema:
+          $ref: '#/definitions/service.PostModel'
+      produces:
+      - text/plain
+      responses:
+        "204":
+          description: Invoice was successfully updated.
+        "400":
+          description: Indicates a failure when parsing Invoice Id|request body or a validation error, e.g. a required field is missing
+          schema:
+            type: string
+        "401":
+          description: Indicates that no authorization info was provided, or authorization is invalid.
+          schema:
+            type: string
+        "404":
+          description: Indicates that no Invoice with given Id was found, or Invoice is deactivated
+          schema:
+            type: string
+        "500":
+          description: Indicates an error that was not handled by the server
+          schema:
+            type: string
+      security:
+      - JwtAuth: []
+      summary: Update Invoice
+      tags:
+      - invoices
+securityDefinitions:
+  JwtAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
+tags:
+- description: Invoice related operations
+  name: invoices
+- description: Auth related operations
+  name: auth
