@@ -14,6 +14,7 @@ func Router() *mux.Router {
 
 	apiv1 := router.PathPrefix("/api/v1/").Subrouter()
 
+	addAuthHandler(apiv1.PathPrefix("/auth").Subrouter())
 	addInvoiceHandler(apiv1.PathPrefix("/invoice").Subrouter())
 
 	return router
