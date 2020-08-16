@@ -5,15 +5,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/jonathanlazaro1/stone-challenge/infra/service"
 )
-
-// ContextAuthClaims hold claims that are passed to the Context, when an request is authenticated
-type ContextAuthClaims struct {
-	Name  string
-	Email string
-}
 
 // ReqAuthInfoName is the special type for the context Auth info name, derived from string
 type ReqAuthInfoName string
@@ -29,19 +22,15 @@ func AddJwtAuthentication(next http.Handler) http.Handler {
 			w.WriteHeader(http.StatusUnauthorized)
 			w.Write([]byte("Malformed or not present token"))
 		} else {
-
-			token, _ := service.DecodeJWT(authHeader[1])
-			if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid && claims.VerifyIssuer(service.JwtIssuer, true) {
-				ctxClaims := ContextAuthClaims{}
-				for k, v := range claims {
-					if k == "sub" {
-						ctxClaims.Email = v.(string)
-					}
-					if k == "name" {
-						ctxClaims.Name = v.(string)
-					}
-				}
-				ctx := context.WithValue(r.Context(), RequestAuthInfo, ctxClaims)
+			claims, err := service.DecodeJWT(authHeader[1])
+			if err != nil {
+				w.WriteHeader(http.StatusUnauthorized)
+				w.Write([]byte("Unauthorized"))
+			} else if claims != nil {
+				ctx := context.WithValue(r.Context(), RequestAuthInfo, struct {
+					Name  string
+					Email string
+				}{Name: claims.Name, Email: claims.Subject})
 				next.ServeHTTP(w, r.WithContext(ctx))
 			} else {
 				w.WriteHeader(http.StatusUnauthorized)
