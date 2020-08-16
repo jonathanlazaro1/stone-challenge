@@ -29,10 +29,10 @@ type Invoice struct {
 	ReferenceYear  int          `json:"referenceYear"`
 	Document       string       `json:"document"`
 	Description    string       `json:"description"`
-	Amount         float64      `json:"amount"`
+	Amount         float64      `json:"amount" swaggertype:"number" format:"float"`
 	IsActive       bool         `json:"isActive"`
-	CreatedAt      time.Time    `json:"createdAt"`
-	DeactivatedAt  JSONNullTime `json:"deactivatedAt"`
+	CreatedAt      time.Time    `json:"createdAt" swaggertype:"string" format:"date-time"`
+	DeactivatedAt  JSONNullTime `json:"deactivatedAt" swaggertype:"string" format:"date-time"`
 }
 
 // NewInvoice creates a new instance of an Invoice
