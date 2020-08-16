@@ -49,14 +49,11 @@ func HandleAuth(w http.ResponseWriter, r *http.Request) {
 // HandleAuthInfo handles requests to get the authenticated user info
 func HandleAuthInfo(w http.ResponseWriter, r *http.Request) {
 	type AuthInfo = struct {
-		sub  string
-		name string
+		Name  string
+		Email string
 	}
-	authInfo := r.Context().Value(middleware.RequestAuthInfo).(middleware.ContextAuthClaims)
+	authInfo := r.Context().Value(middleware.RequestAuthInfo).(AuthInfo)
 
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(struct {
-		Name  string `json:"name"`
-		Email string `json:"email"`
-	}{Name: authInfo.Name, Email: authInfo.Email})
+	json.NewEncoder(w).Encode(AuthInfo{Name: authInfo.Name, Email: authInfo.Email})
 }
