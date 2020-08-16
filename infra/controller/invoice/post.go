@@ -13,6 +13,18 @@ import (
 const errCouldntParsePostModel = "Couldn't parse invoice"
 
 // PostHandler handles a request to post an Invoice
+// @Summary New Invoice
+// @Description Creates an invoice using the values supplied on the request body.
+// @Tags invoices
+// @Accept json
+// @Produce  plain
+// @Security JwtAuth
+// @Param invoice body service.PostModel true "Post Invoice Model. All fields are required."
+// @Success 201 {integer} integer "The new invoice Id"
+// @Failure 400 {string} string "Indicates a failure when parsing request body or a validation error, e.g. a required field is missing"
+// @Failure 401 {string} string "Indicates that no authorization info was provided, or authorization is invalid."
+// @Failure 500 {string} string "Indicates an error that was not handled by the server"
+// @Router /invoice [post]
 func PostHandler(w http.ResponseWriter, r *http.Request) {
 	var model service.PostModel
 	err := json.NewDecoder(r.Body).Decode(&model)
