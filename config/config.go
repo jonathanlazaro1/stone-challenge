@@ -9,11 +9,12 @@ import (
 
 // Config defines the config variables gotten from the environment
 type Config struct {
-	DBHost string
-	DBPort string
-	DBName string
-	DBUser string
-	DBPass string
+	DBHost     string
+	DBPort     string
+	DBName     string
+	DBUser     string
+	DBPass     string
+	AuthSecret string
 }
 
 // Load attempts to load .env var from the projects's root folder
@@ -33,6 +34,7 @@ func GetConfig() *Config {
 	config.DBHost = os.Getenv("DB_HOST")
 	config.DBPort = os.Getenv("DB_PORT")
 	config.DBName = os.Getenv("DB_NAME")
+	config.AuthSecret = os.Getenv("AUTH_SECRET")
 
 	return config
 }
