@@ -4,6 +4,7 @@ go 1.13
 
 require (
 	github.com/brianvoe/gofakeit/v5 v5.9.1
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/doug-martin/goqu/v9 v9.9.0
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
 	github.com/go-ozzo/ozzo-validation/v4 v4.2.2
