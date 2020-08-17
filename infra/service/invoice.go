@@ -2,7 +2,7 @@ package service
 
 import (
 	validation "github.com/go-ozzo/ozzo-validation"
-	domain "github.com/jonathanlazaro1/stone-challenge/domain/invoice"
+	"github.com/jonathanlazaro1/stone-challenge/domain"
 	"github.com/jonathanlazaro1/stone-challenge/helpers"
 	"github.com/jonathanlazaro1/stone-challenge/infra/pgsql/repository"
 	"github.com/jonathanlazaro1/stone-challenge/usecase/invoice"

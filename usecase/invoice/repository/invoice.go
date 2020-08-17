@@ -1,7 +1,7 @@
 package repository
 
 import (
-	domain "github.com/jonathanlazaro1/stone-challenge/domain/invoice"
+	"github.com/jonathanlazaro1/stone-challenge/domain"
 )
 
 // Invoice repository specifies which declarations Invoice repositories should implement

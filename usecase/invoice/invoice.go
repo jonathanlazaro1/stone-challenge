@@ -1,7 +1,7 @@
 package invoice
 
 import (
-	domain "github.com/jonathanlazaro1/stone-challenge/domain/invoice"
+	"github.com/jonathanlazaro1/stone-challenge/domain"
 	"github.com/jonathanlazaro1/stone-challenge/usecase/invoice/repository"
 )
 

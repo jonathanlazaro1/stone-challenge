@@ -6,7 +6,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/jonathanlazaro1/stone-challenge/domain/invoice"
+	"github.com/jonathanlazaro1/stone-challenge/domain"
 	"github.com/jonathanlazaro1/stone-challenge/infra/service"
 )
 
@@ -17,8 +17,8 @@ const errMaxItemsPerPageAllowed = "Max items per page allowed: %v"
 const errParsingSortParams = "Error parsing sort params"
 
 type getManyResult struct {
-	Items      []invoice.Invoice `json:"items"`
-	TotalItems int64             `json:"totalItems"`
+	Items      []domain.Invoice `json:"items"`
+	TotalItems int64            `json:"totalItems"`
 }
 
 // GetManyHandler handles a request to many Invoices

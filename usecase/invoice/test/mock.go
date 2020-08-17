@@ -6,7 +6,7 @@ import (
 	"github.com/jonathanlazaro1/stone-challenge/helpers"
 
 	"github.com/brianvoe/gofakeit/v5"
-	domain "github.com/jonathanlazaro1/stone-challenge/domain/invoice"
+	"github.com/jonathanlazaro1/stone-challenge/domain"
 	rp "github.com/jonathanlazaro1/stone-challenge/usecase/invoice/repository"
 )
 

@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/doug-martin/goqu/v9"
-	domain "github.com/jonathanlazaro1/stone-challenge/domain/invoice"
+	"github.com/jonathanlazaro1/stone-challenge/domain"
 	"github.com/jonathanlazaro1/stone-challenge/infra/pgsql"
 	"github.com/jonathanlazaro1/stone-challenge/usecase/invoice/repository"
 
