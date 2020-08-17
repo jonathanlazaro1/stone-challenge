@@ -11,7 +11,7 @@ import (
 )
 
 // JwtClaims are the claims that are expected to be present on a JWT token sent to the application
-type JwtClaims struct {
+type jwtClaims struct {
 	Name string `json:"name"`
 	jwt.StandardClaims
 }
@@ -27,7 +27,7 @@ func GenerateJWT(email string, name string) (string, error) {
 	cfg := config.GetConfig()
 	now := time.Now().Local().Add(time.Hour * time.Duration(jwtExpInHours))
 
-	claims := JwtClaims{
+	claims := jwtClaims{
 		name,
 		jwt.StandardClaims{
 			Subject:   email,
@@ -45,14 +45,14 @@ func GenerateJWT(email string, name string) (string, error) {
 // DecodeJWT decodes a string encoded in JWT format
 func DecodeJWT(tokenString string) (*domain.AuthInfo, error) {
 	cfg := config.GetConfig()
-	token, err := jwt.ParseWithClaims(tokenString, &JwtClaims{}, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &jwtClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(cfg.AppAuthSecret), nil
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	claims := token.Claims.(*JwtClaims)
+	claims := token.Claims.(*jwtClaims)
 	err = claims.Valid()
 	if err != nil {
 		return nil, err
