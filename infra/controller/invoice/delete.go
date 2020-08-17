@@ -32,7 +32,8 @@ func DeleteHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	deletedInvoice, err := service.Delete(id)
+	svc := service.BuildInvoiceService()
+	deletedInvoice, err := svc.Delete(id)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		io.WriteString(w, "Couldn't update Invoice")

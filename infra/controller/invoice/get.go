@@ -36,8 +36,8 @@ func GetHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	service := service.BuildInvoiceService()
-	invoice, err := service.Get(id)
+	svc := service.BuildInvoiceService()
+	invoice, err := svc.Get(id)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)

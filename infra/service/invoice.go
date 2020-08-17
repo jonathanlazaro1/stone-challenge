@@ -1,62 +1,38 @@
 package service
 
 import (
-	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/jonathanlazaro1/stone-challenge/domain"
-	"github.com/jonathanlazaro1/stone-challenge/helpers"
-	"github.com/jonathanlazaro1/stone-challenge/infra/pgsql"
 	"github.com/jonathanlazaro1/stone-challenge/usecase"
 )
 
-// PostModel represents an Invoice model to be persisted to an Invoice
-type PostModel struct {
-	ReferenceYear  *int     `json:"referenceYear,omitempty"`
-	ReferenceMonth *int     `json:"referenceMonth,omitempty"`
-	Document       *string  `json:"document,omitempty"`
-	Description    *string  `json:"description,omitempty"`
-	Amount         *float64 `json:"amount,omitempty"`
+// InvoiceService handles view layer calls to fetch and modify Invoices
+type InvoiceService struct {
+	interactor usecase.InvoiceInteractor
 }
 
-// Validate verifies if a InvoicePostModel has valid data.
-func (m PostModel) Validate() error {
-	return validation.ValidateStruct(&m,
-		validation.Field(&m.ReferenceYear, validation.Required, validation.Min(1900), validation.Max(2100)),
-		validation.Field(&m.ReferenceMonth, validation.Required, validation.Min(1), validation.Max(12)),
-		validation.Field(&m.Document, validation.Required, validation.RuneLength(1, 14)),
-		validation.Field(&m.Description, validation.Required, validation.RuneLength(1, 256)),
-		validation.Field(&m.Amount, validation.Required, validation.Min(0.01)),
-	)
+func newInvoiceService(repo usecase.InvoiceRepository) *InvoiceService {
+	return &InvoiceService{interactor: *usecase.NewInvoiceInteractor(repo)}
 }
 
-// ToInvoice converts a PostModel to an Invoice instance
-func (m PostModel) ToInvoice(invoiceToMerge *domain.Invoice) domain.Invoice {
-	if invoiceToMerge == nil {
-		invoice := domain.NewInvoice()
-		invoice.ReferenceYear = *m.ReferenceYear
-		invoice.ReferenceMonth = *m.ReferenceMonth
-		invoice.Document = *m.Document
-		invoice.Description = *m.Description
-		invoice.Amount = *m.Amount
-
-		return invoice
-	}
-	helpers.CopyIfNotNil(&m, invoiceToMerge)
-	return *invoiceToMerge
+// GetMany returns an array of Invoices, according to the given arguments
+func (svc *InvoiceService) GetMany(itemsPerPage int, page int, filterBy map[string]string, sortBy map[string]bool) ([]domain.Invoice, int64, error) {
+	return svc.interactor.GetMany(itemsPerPage, page, filterBy, sortBy)
 }
 
-// BuildInvoiceService builds a new InvoiceInteractor with the specified repository
-func BuildInvoiceService() *usecase.InvoiceInteractor {
-	repo := pgsql.GetInvoiceRepository()
-	service := usecase.NewInvoiceInteractor(repo)
-
-	return service
+// Get an Invoice, given its Id
+func (svc *InvoiceService) Get(id int) (*domain.Invoice, error) {
+	return svc.interactor.Get(id)
 }
 
-// Put replaces Invoce values on the repository from the ones coming from the request.
-// It ignores the server-control related ones, such as CreatedAt, IsActive and UpdatedAt
-func Put(id int, postModel PostModel) (*domain.Invoice, error) {
-	service := BuildInvoiceService()
-	currentInvoice, err := service.Get(id)
+// Add creates a new Invoice
+func (svc *InvoiceService) Add(invoice domain.Invoice) (int, error) {
+	return svc.interactor.Add(invoice)
+}
+
+// Update replaces the values on the Invoice held by id, using the new ones that came from request.
+// It ignores server-controled ones, such as CreatedAt, IsActive and UpdatedAt
+func (svc *InvoiceService) Update(id int, postModel PostModel) (*domain.Invoice, error) {
+	currentInvoice, err := svc.interactor.Get(id)
 	if err != nil {
 		return nil, err
 	} else if currentInvoice == nil {
@@ -64,14 +40,14 @@ func Put(id int, postModel PostModel) (*domain.Invoice, error) {
 	}
 	updatedInvoice := postModel.ToInvoice(currentInvoice)
 
-	rowCount, err := service.Update(updatedInvoice)
+	rowCount, err := svc.interactor.Update(updatedInvoice)
 	if err != nil {
 		return nil, err
 	} else if rowCount < 1 {
 		return nil, nil
 	}
 
-	currentInvoice, err = service.Get(id)
+	currentInvoice, err = svc.interactor.Get(id)
 	if err != nil {
 		return nil, err
 	}
@@ -79,23 +55,22 @@ func Put(id int, postModel PostModel) (*domain.Invoice, error) {
 }
 
 // Delete makes an Invoice inactive, which makes it unable to be retrieved/maintained
-func Delete(id int) (bool, error) {
-	service := BuildInvoiceService()
-	invoice, err := service.Get(id)
+func (svc *InvoiceService) Delete(id int) (bool, error) {
+	invoice, err := svc.interactor.Get(id)
 	if err != nil {
 		return false, err
 	} else if invoice == nil {
 		return false, nil
 	}
 
-	rowCount, err := service.Delete(*invoice)
+	rowCount, err := svc.interactor.Delete(*invoice)
 	if err != nil {
 		return false, err
 	} else if rowCount < 1 {
 		return false, nil
 	}
 
-	invoice, err = service.Get(id)
+	invoice, err = svc.interactor.Get(id)
 	if err != nil {
 		return false, err
 	}

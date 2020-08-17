@@ -39,7 +39,8 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	newInvoice, err := service.Put(id, model)
+	svc := service.BuildInvoiceService()
+	newInvoice, err := svc.Update(id, model)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		io.WriteString(w, "Couldn't update Invoice")

@@ -59,12 +59,12 @@ func GetManyHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	service := service.BuildInvoiceService()
+	svc := service.BuildInvoiceService()
 
 	filterBy := parseFilterByToMap(pathParams)
 	sortBy := parseSortByToMap(pathParams)
 
-	invoices, total, err := service.GetMany(itemsPerPage, page, filterBy, sortBy)
+	invoices, total, err := svc.GetMany(itemsPerPage, page, filterBy, sortBy)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
