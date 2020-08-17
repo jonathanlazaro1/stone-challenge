@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -45,6 +46,7 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 
 	id, err := service.Add(model.ToInvoice(nil))
 	if err != nil {
+		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		io.WriteString(w, "Couldn't create Invoice")
 		return
