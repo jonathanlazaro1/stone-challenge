@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/jonathanlazaro1/stone-challenge/usecase"
+
 	"github.com/doug-martin/goqu/v9"
 	"github.com/jonathanlazaro1/stone-challenge/domain"
 	"github.com/jonathanlazaro1/stone-challenge/infra/pgsql"
-	"github.com/jonathanlazaro1/stone-challenge/usecase/invoice/repository"
 
 	// Goqu PGSQL dialect
 	_ "github.com/doug-martin/goqu/v9/dialect/postgres"
@@ -17,7 +18,7 @@ type invoiceRepository struct {
 }
 
 // GetInvoiceRepository returns an implementation of InvoiceRepository that relies on a PGSQL DB
-func GetInvoiceRepository() repository.Invoice {
+func GetInvoiceRepository() usecase.InvoiceRepository {
 	return &invoiceRepository{}
 }
 

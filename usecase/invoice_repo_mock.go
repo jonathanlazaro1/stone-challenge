@@ -1,4 +1,4 @@
-package test
+package usecase
 
 import (
 	"time"
@@ -7,7 +7,6 @@ import (
 
 	"github.com/brianvoe/gofakeit/v5"
 	"github.com/jonathanlazaro1/stone-challenge/domain"
-	rp "github.com/jonathanlazaro1/stone-challenge/usecase/invoice/repository"
 )
 
 type mockedInvoiceRepository struct {
@@ -34,7 +33,7 @@ func (mp *mockedInvoiceRepository) Update(invoice domain.Invoice) (int64, error)
 }
 
 // MockInvoiceRepository creates a mocked implementation of an InvoiceRepository
-func MockInvoiceRepository(size int) rp.Invoice {
+func MockInvoiceRepository(size int) InvoiceRepository {
 	repo := &mockedInvoiceRepository{}
 	for i := 0; i < size; i++ {
 		repo.invoices = append(repo.invoices, MakeFakeInvoice())

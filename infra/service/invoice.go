@@ -5,8 +5,7 @@ import (
 	"github.com/jonathanlazaro1/stone-challenge/domain"
 	"github.com/jonathanlazaro1/stone-challenge/helpers"
 	"github.com/jonathanlazaro1/stone-challenge/infra/pgsql/repository"
-	"github.com/jonathanlazaro1/stone-challenge/usecase/invoice"
-	uc "github.com/jonathanlazaro1/stone-challenge/usecase/invoice"
+	"github.com/jonathanlazaro1/stone-challenge/usecase"
 )
 
 // PostModel represents an Invoice model to be persisted to an Invoice
@@ -46,9 +45,9 @@ func (m PostModel) ToInvoice(invoiceToMerge *domain.Invoice) domain.Invoice {
 }
 
 // BuildInvoiceService builds a new InvoiceInteractor with the specified repository
-func BuildInvoiceService() *invoice.Interactor {
+func BuildInvoiceService() *usecase.InvoiceInteractor {
 	repo := repository.GetInvoiceRepository()
-	service := uc.NewInteractor(repo)
+	service := usecase.NewInvoiceInteractor(repo)
 
 	return service
 }
