@@ -7,7 +7,9 @@ A API utiliza-se das seguintes tecnologias:
 
 - Go v1.13
 - Gorilla Mux (router)
-- PostgreSQL v12 - pq (driver PGSQL nativo em Go) - goqu (builder de queries SQL)
+- PostgreSQL v12 
+   - pq (driver PGSQL nativo em Go) 
+   - goqu (builder de queries SQL)
 - Swagger (utilizando o package swag)
 - Heroku, GitHub Actions
 
