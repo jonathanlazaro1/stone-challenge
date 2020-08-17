@@ -11,10 +11,8 @@ import (
 	_ "github.com/lib/pq"
 )
 
-// TODO: CreateConnection should return an error
-
 // CreateConnection tries to create a DBConnection using PGSQL. It panics if is not possible to connect to the DB specified in .env
-func CreateConnection() *sql.DB {
+func CreateConnection() (*sql.DB, error) {
 	cfg := config.GetConfig()
 	var err error
 	var db *sql.DB
@@ -34,7 +32,7 @@ func CreateConnection() *sql.DB {
 
 	db, err = sql.Open("postgres", connStr)
 	if db == nil {
-		return nil
+		return nil, err
 	}
 
 	for i := 1; i < 6; i++ {
@@ -47,7 +45,8 @@ func CreateConnection() *sql.DB {
 	}
 
 	if err != nil {
-		log.Fatalf("Connect to DB failed after 5 attempts: %v", err)
+		log.Printf("Connect to DB failed after 5 attempts: %v", err)
+		return nil, err
 	}
-	return db
+	return db, nil
 }

@@ -23,7 +23,11 @@ func GetInvoiceRepository() usecase.InvoiceRepository {
 
 // GetMany fetches all invoices found on DB table invoice, according to the parameters given. It also returns the total count for the query made
 func (repo *invoiceRepository) GetMany(itemsPerPage int, page int, filterBy map[string]string, sortBy map[string]bool) ([]domain.Invoice, int64, error) {
-	db := CreateConnection()
+	var count int64 = -1
+	db, err := CreateConnection()
+	if err != nil {
+		return nil, count, err
+	}
 	defer db.Close()
 	database := goqu.New("postgresql", db)
 
@@ -40,7 +44,7 @@ func (repo *invoiceRepository) GetMany(itemsPerPage int, page int, filterBy map[
 	}
 
 	// Counting rows
-	count, err := goquSQL.Count()
+	count, err = goquSQL.Count()
 	if err != nil {
 		log.Printf("Unable to fetch invoices. %v", err)
 		return nil, count, err
@@ -65,7 +69,10 @@ func (repo *invoiceRepository) GetMany(itemsPerPage int, page int, filterBy map[
 
 // Get finds an Invoice, given its Id
 func (repo *invoiceRepository) Get(id int) (*domain.Invoice, error) {
-	db := CreateConnection()
+	db, err := CreateConnection()
+	if err != nil {
+		return nil, err
+	}
 	defer db.Close()
 	database := goqu.New("postgresql", db)
 
@@ -94,7 +101,11 @@ func (repo *invoiceRepository) Get(id int) (*domain.Invoice, error) {
 
 // Add creates a new Invoice on DB
 func (repo *invoiceRepository) Add(invoice domain.Invoice) (int, error) {
-	db := CreateConnection()
+	var id int
+	db, err := CreateConnection()
+	if err != nil {
+		return id, err
+	}
 	defer db.Close()
 	database := goqu.New("postgresql", db)
 
@@ -109,8 +120,7 @@ func (repo *invoiceRepository) Add(invoice domain.Invoice) (int, error) {
 		"deactivated_at":  invoice.DeactivatedAt,
 	}
 
-	var id int
-	_, err := database.From("invoice").Insert().Rows(record).Returning("id").Executor().ScanVal(&id)
+	_, err = database.From("invoice").Insert().Rows(record).Returning("id").Executor().ScanVal(&id)
 	if err != nil {
 		return id, err
 	}
@@ -120,7 +130,11 @@ func (repo *invoiceRepository) Add(invoice domain.Invoice) (int, error) {
 
 // Update updates an existent Invoice on DB
 func (repo *invoiceRepository) Update(invoice domain.Invoice) (int64, error) {
-	db := CreateConnection()
+	var rowsAffected int64 = -1
+	db, err := CreateConnection()
+	if err != nil {
+		return rowsAffected, err
+	}
 	defer db.Close()
 	database := goqu.New("postgresql", db)
 
@@ -140,7 +154,6 @@ func (repo *invoiceRepository) Update(invoice domain.Invoice) (int64, error) {
 		Update().
 		Set(record)
 
-	var rowsAffected int64 = -1
 	res, err := goquSQL.Executor().Exec()
 	if err != nil {
 		return rowsAffected, err
