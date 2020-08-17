@@ -50,6 +50,7 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Add("Location", fmt.Sprintf("%v%v%v/%v", r.URL.Scheme, r.Host, r.RequestURI, id))
 	w.WriteHeader(http.StatusCreated)
 	io.WriteString(w, strconv.Itoa(id))
 }
