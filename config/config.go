@@ -46,7 +46,7 @@ func GetConfig() *Config {
 	config.DBName = os.Getenv("DB_NAME")
 	config.DBSSLMode = os.Getenv("DB_SSL_MODE")
 	config.AppAuthSecret = os.Getenv("APP_AUTH_SECRET")
-	if config.AppPort = os.Getenv("APP_PORT"); config.AppPort == "" {
+	if config.AppPort = os.Getenv("PORT"); config.AppPort == "" {
 		log.Fatalf("Couldn't find App Port to run")
 	}
 
