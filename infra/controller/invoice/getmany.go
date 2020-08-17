@@ -59,6 +59,7 @@ func GetManyHandler(svc service.Invoice) func(w http.ResponseWriter, r *http.Req
 			return
 		}
 
+		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(getManyResult{
 			Items:      invoices,
 			TotalItems: total,
