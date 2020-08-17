@@ -4,29 +4,12 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"testing"
-
-	"github.com/jonathanlazaro1/stone-challenge/infra/service"
-	"github.com/jonathanlazaro1/stone-challenge/usecase"
-
-	"github.com/jonathanlazaro1/stone-challenge/config"
 )
 
 // ==================== NO PARAMS ====================
 
-func TestMain(m *testing.M) {
-	config.Load()
-
-	os.Exit(m.Run())
-}
-
-func buildRequestFunction(funcBuilder func(service.Invoice) func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request) {
-	svc := service.NewInvoiceService(usecase.NewInvoiceInteractor(usecase.MockInvoiceRepository(100)))
-	return funcBuilder(*svc)
-}
-
-func TestInvoiceGetManyHandlerWithoutParameters(t *testing.T) {
+func TestInvoiceGetManyWithoutParameters(t *testing.T) {
 	verb := "GET"
 	endpoint := "/api/v1/invoice"
 	req, err := http.NewRequest(verb, endpoint, nil)
@@ -55,7 +38,7 @@ func TestInvoiceGetManyHandlerWithoutParameters(t *testing.T) {
 
 // ==================== ITEMS PER PAGE ====================
 
-func TestInvoiceGetManyHandlerWithItemsPerPage(t *testing.T) {
+func TestInvoiceGetManyWithItemsPerPage(t *testing.T) {
 	verb := "GET"
 	endpoint := "/api/v1/invoice?itemsperpage=20"
 	req, err := http.NewRequest(verb, endpoint, nil)
@@ -81,7 +64,7 @@ func TestInvoiceGetManyHandlerWithItemsPerPage(t *testing.T) {
 	}
 }
 
-func TestInvoiceGetManyHandlerWithUnparseableItemsPerPage(t *testing.T) {
+func TestInvoiceGetManyWithUnparseableItemsPerPage(t *testing.T) {
 	verb := "GET"
 	endpoint := "/api/v1/invoice?itemsperpage=notagreatitemsperpage"
 	req, err := http.NewRequest(verb, endpoint, nil)
