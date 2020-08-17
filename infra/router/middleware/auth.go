@@ -27,10 +27,7 @@ func AddJwtAuthentication(next http.Handler) http.Handler {
 				w.WriteHeader(http.StatusUnauthorized)
 				w.Write([]byte("Unauthorized"))
 			} else if claims != nil {
-				ctx := context.WithValue(r.Context(), RequestAuthInfo, struct {
-					Name  string
-					Email string
-				}{Name: claims.Name, Email: claims.Subject})
+				ctx := context.WithValue(r.Context(), RequestAuthInfo, *claims)
 				next.ServeHTTP(w, r.WithContext(ctx))
 			} else {
 				w.WriteHeader(http.StatusUnauthorized)

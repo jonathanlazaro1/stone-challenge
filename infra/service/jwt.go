@@ -4,6 +4,8 @@ import (
 	"errors"
 	"time"
 
+	"github.com/jonathanlazaro1/stone-challenge/domain"
+
 	"github.com/dgrijalva/jwt-go"
 	"github.com/jonathanlazaro1/stone-challenge/config"
 )
@@ -41,7 +43,7 @@ func GenerateJWT(email string, name string) (string, error) {
 }
 
 // DecodeJWT decodes a string encoded in JWT format
-func DecodeJWT(tokenString string) (*JwtClaims, error) {
+func DecodeJWT(tokenString string) (*domain.AuthInfo, error) {
 	config := config.GetConfig()
 	token, err := jwt.ParseWithClaims(tokenString, &JwtClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(config.AppAuthSecret), nil
@@ -60,5 +62,5 @@ func DecodeJWT(tokenString string) (*JwtClaims, error) {
 		err = errors.New("Issuer is invalid")
 		return nil, err
 	}
-	return claims, nil
+	return &domain.AuthInfo{Name: claims.Name, Email: claims.Subject}, nil
 }
