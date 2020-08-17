@@ -9,6 +9,7 @@ import (
 
 // Config defines the config variables gotten from the environment
 type Config struct {
+	DBURL         string
 	DBHost        string
 	DBPort        string
 	DBName        string
@@ -37,6 +38,7 @@ func Load() {
 func GetConfig() *Config {
 	config := &Config{}
 
+	config.DBURL = os.Getenv("DATABASE_URL")
 	config.DBUser = os.Getenv("DB_USER")
 	config.DBPass = os.Getenv("DB_PASS")
 	config.DBHost = os.Getenv("DB_HOST")
