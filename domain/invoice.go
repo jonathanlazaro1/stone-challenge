@@ -24,15 +24,15 @@ func (v JSONNullTime) MarshalJSON() ([]byte, error) {
 
 // Invoice represents an Invoice entity. A new Invoice must be obtained by using NewInvoice method
 type Invoice struct {
-	ID             int          `json:"id"`
-	ReferenceMonth int          `json:"referenceMonth"`
-	ReferenceYear  int          `json:"referenceYear"`
-	Document       string       `json:"document"`
-	Description    string       `json:"description"`
-	Amount         float64      `json:"amount" swaggertype:"number" format:"float"`
-	IsActive       bool         `json:"isActive"`
-	CreatedAt      time.Time    `json:"createdAt" swaggertype:"string" format:"date-time"`
-	DeactivatedAt  JSONNullTime `json:"deactivatedAt" swaggertype:"string" format:"date-time"`
+	ID             int          `json:"id" db:"id"`
+	ReferenceMonth int          `json:"referenceMonth" db:"reference_month"`
+	ReferenceYear  int          `json:"referenceYear" db:"reference_year"`
+	Document       string       `json:"document" db:"document"`
+	Description    string       `json:"description" db:"description"`
+	Amount         float64      `json:"amount" db:"amount" swaggertype:"number" format:"float"`
+	IsActive       bool         `json:"isActive" db:"is_active"`
+	CreatedAt      time.Time    `json:"createdAt" db:"created_at" swaggertype:"string" format:"date-time"`
+	DeactivatedAt  JSONNullTime `json:"deactivatedAt" db:"deactivated_at" swaggertype:"string" format:"date-time"`
 }
 
 // NewInvoice creates a new instance of an Invoice
