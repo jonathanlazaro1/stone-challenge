@@ -22,7 +22,6 @@ func DeleteHandler(svc service.Invoice) func(w http.ResponseWriter, r *http.Requ
 			return
 		}
 
-		svc := service.BuildInvoiceService()
 		deletedInvoice, err := svc.Delete(id)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)

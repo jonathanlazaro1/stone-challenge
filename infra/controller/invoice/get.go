@@ -36,7 +36,7 @@ func GetHandler(svc service.Invoice) func(w http.ResponseWriter, r *http.Request
 			io.WriteString(w, errInvoiceNotFound)
 			return
 		}
-
+		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(invoice)
 	}
 }

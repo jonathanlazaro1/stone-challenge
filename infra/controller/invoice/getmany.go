@@ -46,8 +46,6 @@ func GetManyHandler(svc service.Invoice) func(w http.ResponseWriter, r *http.Req
 			return
 		}
 
-		svc := service.BuildInvoiceService()
-
 		filterBy := parseFilterByToMap(pathParams)
 		sortBy := parseSortByToMap(pathParams)
 

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -41,9 +42,9 @@ func UpdateHandler(svc service.Invoice) func(w http.ResponseWriter, r *http.Requ
 			}
 		}
 
-		svc := service.BuildInvoiceService()
 		newInvoice, err := svc.Update(id, model)
 		if err != nil {
+			log.Println(err)
 			w.WriteHeader(http.StatusInternalServerError)
 			io.WriteString(w, "Couldn't update Invoice")
 			return
