@@ -23,7 +23,7 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
-func buildRequestFunction(funcBuilder func(service.Invoice) func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request) {
+func buildRequestFunction(funcBuilder func(service.InvoiceService) func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request) {
 	svc := service.NewInvoiceService(usecase.MockInvoiceRepository(100))
 	return funcBuilder(*svc)
 }

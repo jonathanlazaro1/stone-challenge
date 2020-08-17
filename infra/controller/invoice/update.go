@@ -14,7 +14,7 @@ import (
 )
 
 // UpdateHandler handles a request to update an Invoice
-func UpdateHandler(svc service.Invoice) func(w http.ResponseWriter, r *http.Request) {
+func UpdateHandler(svc service.InvoiceService) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		id, err := strconv.Atoi(vars["id"])

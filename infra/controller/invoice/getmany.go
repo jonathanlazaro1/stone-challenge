@@ -22,7 +22,7 @@ type getManyResult struct {
 }
 
 // GetManyHandler handles a request to many Invoices
-func GetManyHandler(svc service.Invoice) func(w http.ResponseWriter, r *http.Request) {
+func GetManyHandler(svc service.InvoiceService) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		pathParams := r.URL.Query()
 

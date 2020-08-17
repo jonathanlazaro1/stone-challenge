@@ -14,7 +14,7 @@ import (
 const errCouldntParsePostModel = "Couldn't parse invoice"
 
 // PostHandler handles a request to post an Invoice
-func PostHandler(svc service.Invoice) func(w http.ResponseWriter, r *http.Request) {
+func PostHandler(svc service.InvoiceService) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var model service.PostModel
 		err := json.NewDecoder(r.Body).Decode(&model)

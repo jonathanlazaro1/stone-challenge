@@ -14,7 +14,7 @@ const errInvoiceNotFound = "Couldn't find invoice"
 const errCouldntParseInvoiceID = "Couldn't parse invoice Id"
 
 // GetHandler handles a request to an Invoice by its id
-func GetHandler(svc service.Invoice) func(w http.ResponseWriter, r *http.Request) {
+func GetHandler(svc service.InvoiceService) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		id, err := strconv.Atoi(vars["id"])

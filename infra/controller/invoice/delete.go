@@ -11,7 +11,7 @@ import (
 )
 
 // DeleteHandler handles a request to delete an Invoice
-func DeleteHandler(svc service.Invoice) func(w http.ResponseWriter, r *http.Request) {
+func DeleteHandler(svc service.InvoiceService) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		id, err := strconv.Atoi(vars["id"])

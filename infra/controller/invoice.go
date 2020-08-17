@@ -9,7 +9,7 @@ import (
 
 // InvoiceController groups handlers and injects services for invoice-related requests
 type InvoiceController struct {
-	service service.Invoice
+	service service.InvoiceService
 }
 
 // GetMany handles a request to many Invoices
