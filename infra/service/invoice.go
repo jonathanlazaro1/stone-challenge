@@ -4,7 +4,7 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/jonathanlazaro1/stone-challenge/domain"
 	"github.com/jonathanlazaro1/stone-challenge/helpers"
-	"github.com/jonathanlazaro1/stone-challenge/infra/pgsql/repository"
+	"github.com/jonathanlazaro1/stone-challenge/infra/pgsql"
 	"github.com/jonathanlazaro1/stone-challenge/usecase"
 )
 
@@ -46,7 +46,7 @@ func (m PostModel) ToInvoice(invoiceToMerge *domain.Invoice) domain.Invoice {
 
 // BuildInvoiceService builds a new InvoiceInteractor with the specified repository
 func BuildInvoiceService() *usecase.InvoiceInteractor {
-	repo := repository.GetInvoiceRepository()
+	repo := pgsql.GetInvoiceRepository()
 	service := usecase.NewInvoiceInteractor(repo)
 
 	return service

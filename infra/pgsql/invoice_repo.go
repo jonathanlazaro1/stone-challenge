@@ -1,4 +1,4 @@
-package repository
+package pgsql
 
 import (
 	"fmt"
@@ -8,7 +8,6 @@ import (
 
 	"github.com/doug-martin/goqu/v9"
 	"github.com/jonathanlazaro1/stone-challenge/domain"
-	"github.com/jonathanlazaro1/stone-challenge/infra/pgsql"
 
 	// Goqu PGSQL dialect
 	_ "github.com/doug-martin/goqu/v9/dialect/postgres"
@@ -25,7 +24,7 @@ func GetInvoiceRepository() usecase.InvoiceRepository {
 //TODO: change document filter to be "like" instead of "equal"
 // GetMany fetches all invoices found on DB table invoice, according to the parameters given. It also returns the total count for the query made
 func (repo *invoiceRepository) GetMany(itemsPerPage int, page int, filterBy map[string]string, sortBy map[string]bool) ([]domain.Invoice, int64, error) {
-	db := pgsql.CreateConnection()
+	db := CreateConnection()
 	defer db.Close()
 	database := goqu.New("postgresql", db)
 
@@ -92,7 +91,7 @@ func (repo *invoiceRepository) GetMany(itemsPerPage int, page int, filterBy map[
 
 // Get finds an Invoice, given its Id
 func (repo *invoiceRepository) Get(id int) (*domain.Invoice, error) {
-	db := pgsql.CreateConnection()
+	db := CreateConnection()
 	defer db.Close()
 	database := goqu.New("postgresql", db)
 
@@ -131,7 +130,7 @@ func (repo *invoiceRepository) Get(id int) (*domain.Invoice, error) {
 
 // Add creates a new Invoice on DB
 func (repo *invoiceRepository) Add(invoice domain.Invoice) (int, error) {
-	db := pgsql.CreateConnection()
+	db := CreateConnection()
 	defer db.Close()
 	database := goqu.New("postgresql", db)
 
@@ -160,7 +159,7 @@ func (repo *invoiceRepository) Add(invoice domain.Invoice) (int, error) {
 
 // Update updates an existent Invoice on DB
 func (repo *invoiceRepository) Update(invoice domain.Invoice) (int64, error) {
-	db := pgsql.CreateConnection()
+	db := CreateConnection()
 	defer db.Close()
 	database := goqu.New("postgresql", db)
 
