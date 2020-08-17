@@ -16,37 +16,37 @@ type JwtClaims struct {
 	jwt.StandardClaims
 }
 
-// JwtIssuer is the issuer of the JWT token
-const JwtIssuer = "Invoice API"
+// jwtIssuer is the issuer of the JWT token
+const jwtIssuer = "Invoice API"
 
-// JwtExpInHours is the time, in hours, that the JWT token is valid for
-const JwtExpInHours = 10
+// jwtExpInHours is the time, in hours, that the JWT token is valid for
+const jwtExpInHours = 10
 
 // GenerateJWT gerenates a new JWT, given an email and name
 func GenerateJWT(email string, name string) (string, error) {
-	config := config.GetConfig()
-	now := time.Now().Local().Add(time.Hour * time.Duration(JwtExpInHours))
+	cfg := config.GetConfig()
+	now := time.Now().Local().Add(time.Hour * time.Duration(jwtExpInHours))
 
 	claims := JwtClaims{
 		name,
 		jwt.StandardClaims{
 			Subject:   email,
-			Issuer:    JwtIssuer,
+			Issuer:    jwtIssuer,
 			ExpiresAt: now.Unix(),
 		},
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	tokenString, err := token.SignedString([]byte(config.AppAuthSecret))
+	tokenString, err := token.SignedString([]byte(cfg.AppAuthSecret))
 	return tokenString, err
 }
 
 // DecodeJWT decodes a string encoded in JWT format
 func DecodeJWT(tokenString string) (*domain.AuthInfo, error) {
-	config := config.GetConfig()
+	cfg := config.GetConfig()
 	token, err := jwt.ParseWithClaims(tokenString, &JwtClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(config.AppAuthSecret), nil
+		return []byte(cfg.AppAuthSecret), nil
 	})
 	if err != nil {
 		return nil, err
@@ -58,7 +58,7 @@ func DecodeJWT(tokenString string) (*domain.AuthInfo, error) {
 		return nil, err
 	}
 
-	if !claims.VerifyIssuer(JwtIssuer, true) {
+	if !claims.VerifyIssuer(jwtIssuer, true) {
 		err = errors.New("Issuer is invalid")
 		return nil, err
 	}
