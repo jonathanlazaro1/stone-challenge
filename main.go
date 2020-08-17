@@ -24,6 +24,7 @@ package main
 // @tokenUrl /auth
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -37,10 +38,11 @@ import (
 
 func main() {
 	config.Load()
+	config := config.GetConfig()
 
 	pgsql.Migrate()
 	r := router.Router()
 
-	log.Println("Starting server on port 8080...")
-	log.Fatal(http.ListenAndServe(":8080", r))
+	log.Println(fmt.Sprintf("Starting server on port %v...", config.AppPort))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", config.AppPort), r))
 }

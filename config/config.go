@@ -9,16 +9,24 @@ import (
 
 // Config defines the config variables gotten from the environment
 type Config struct {
-	DBHost     string
-	DBPort     string
-	DBName     string
-	DBUser     string
-	DBPass     string
-	AuthSecret string
+	DBHost        string
+	DBPort        string
+	DBName        string
+	DBUser        string
+	DBPass        string
+	DBSSLMode     string
+	AppPort       string
+	AppAuthSecret string
 }
 
 // Load attempts to load .env var from the projects's root folder
 func Load() {
+	// If this env var is present, other vars must be present on the container env
+	isRunningOnDocker := os.Getenv("IS_DOCKER")
+	if isRunningOnDocker != "" {
+		return
+	}
+
 	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatalf("Error loading .env file: %v", err)
@@ -34,7 +42,11 @@ func GetConfig() *Config {
 	config.DBHost = os.Getenv("DB_HOST")
 	config.DBPort = os.Getenv("DB_PORT")
 	config.DBName = os.Getenv("DB_NAME")
-	config.AuthSecret = os.Getenv("AUTH_SECRET")
+	config.DBSSLMode = os.Getenv("DB_SSL_MODE")
+	config.AppAuthSecret = os.Getenv("APP_AUTH_SECRET")
+	if config.AppPort = os.Getenv("APP_PORT"); config.AppPort == "" {
+		log.Fatalf("Couldn't find App Port to run")
+	}
 
 	return config
 }
