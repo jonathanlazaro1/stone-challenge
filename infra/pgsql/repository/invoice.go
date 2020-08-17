@@ -21,6 +21,7 @@ func GetInvoiceRepository() repository.Invoice {
 	return &invoiceRepository{}
 }
 
+//TODO: change document filter to be "like" instead of "equal"
 // GetMany fetches all invoices found on DB table invoice, according to the parameters given. It also returns the total count for the query made
 func (repo *invoiceRepository) GetMany(itemsPerPage int, page int, filterBy map[string]string, sortBy map[string]bool) ([]domain.Invoice, int64, error) {
 	db := pgsql.CreateConnection()
