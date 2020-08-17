@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  localdb:
+    image: postgres:12
+    ports:
+      - "5434:5432"
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: dbpass

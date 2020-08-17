@@ -1,0 +1,35 @@
+version: "3"
+
+services:
+  pgsqldb:
+    image: postgres:12
+    ports:
+      - "5433:5432"
+    restart: always
+    networks:
+      - apinetwork
+    environment:
+      POSTGRES_PASSWORD: invoiceapi
+
+  invoiceapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - apinetwork
+    environment:
+      - IS_DOCKER=true
+      - DB_USER=postgres
+      - DB_PASS=invoiceapi
+      - DB_HOST=pgsqldb
+      - DB_PORT=5432
+      - DB_NAME=postgres
+      - DB_SSL_MODE=disable
+      - APP_PORT=8080
+      - APP_AUTH_SECRET=l1k3_4_570n3
+
+networks:
+  apinetwork:
+    driver: bridge
