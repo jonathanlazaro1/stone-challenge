@@ -65,7 +65,7 @@ definitions:
       referenceYear:
         type: integer
     type: object
-host: localhost:8080
+host: https://stone-invoice-api.herokuapp.com
 info:
   contact:
     email: jonathan.lazaro1@gmail.com

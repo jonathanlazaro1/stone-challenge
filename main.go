@@ -9,7 +9,7 @@ package main
 // @tag.name auth
 // @tag.description Auth related operations
 
-// @host localhost:8080
+// @host https://stone-invoice-api.herokuapp.com
 // @BasePath /api/v1
 
 // @license.name MIT
