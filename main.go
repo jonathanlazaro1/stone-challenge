@@ -32,7 +32,6 @@ import (
 
 	_ "github.com/jonathanlazaro1/stone-challenge/docs"
 
-	"github.com/jonathanlazaro1/stone-challenge/infra/pgsql"
 	"github.com/jonathanlazaro1/stone-challenge/infra/router"
 )
 
@@ -40,7 +39,6 @@ func main() {
 	config.Load()
 	config := config.GetConfig()
 
-	pgsql.Migrate()
 	r := router.Router()
 
 	log.Println(fmt.Sprintf("Starting server on port %v...", config.AppPort))

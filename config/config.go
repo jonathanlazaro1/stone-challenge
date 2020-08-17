@@ -3,6 +3,7 @@ package config
 import (
 	"log"
 	"os"
+	"regexp"
 
 	"github.com/joho/godotenv"
 )
@@ -28,9 +29,13 @@ func Load() {
 		return
 	}
 
-	err := godotenv.Load(".env")
+	re := regexp.MustCompile(`^(.*` + "stone-challenge" + `)`)
+	cwd, _ := os.Getwd()
+	rootPath := re.Find([]byte(cwd))
+
+	err := godotenv.Load(string(rootPath) + `/.env`)
 	if err != nil {
-		log.Fatalf("Error loading .env file: %v", err)
+		log.Fatalf("Error loading .env vars: %v", err)
 	}
 }
 
