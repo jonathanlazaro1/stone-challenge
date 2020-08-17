@@ -36,7 +36,6 @@ func CreateConnection() (*sql.DB, error) {
 	}
 
 	for i := 1; i < 6; i++ {
-		log.Printf("Trying to connect to DB... Attempt %v", i)
 		err = db.Ping()
 		if err == nil {
 			break
