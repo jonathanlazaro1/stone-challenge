@@ -71,9 +71,5 @@ func (svc *Invoice) Delete(id int) (bool, error) {
 		return false, nil
 	}
 
-	invoice, err = svc.interactor.Get(id)
-	if err != nil {
-		return false, err
-	}
-	return invoice == nil, nil
+	return true, nil
 }
