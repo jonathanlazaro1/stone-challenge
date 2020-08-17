@@ -13,9 +13,6 @@ import (
 	"github.com/jonathanlazaro1/stone-challenge/config"
 )
 
-//TODO: improve tests to check if passed parameteres are coming to handler as expected
-// TODO: make tests pass without have to maintain a .env inside invoice folder
-
 // ==================== NO PARAMS ====================
 
 func TestMain(m *testing.M) {

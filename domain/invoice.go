@@ -6,7 +6,6 @@ import (
 	"time"
 )
 
-// TODO: remove SQLNullTime things away from domain
 // TODO: guarantee UTC time output
 
 // JSONNullTime represents a time.Time type that can be null
