@@ -7,6 +7,9 @@ import (
 	"os"
 	"testing"
 
+	"github.com/jonathanlazaro1/stone-challenge/infra/service"
+	"github.com/jonathanlazaro1/stone-challenge/usecase"
+
 	"github.com/jonathanlazaro1/stone-challenge/config"
 )
 
@@ -21,6 +24,11 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
+func buildRequestFunction(funcBuilder func(service.Invoice) func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request) {
+	svc := service.NewInvoiceService(usecase.NewInvoiceInteractor(usecase.MockInvoiceRepository(100)))
+	return funcBuilder(*svc)
+}
+
 func TestInvoiceGetManyHandlerWithoutParameters(t *testing.T) {
 	verb := "GET"
 	endpoint := "/api/v1/invoice"
@@ -31,7 +39,8 @@ func TestInvoiceGetManyHandlerWithoutParameters(t *testing.T) {
 	}
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(GetManyHandler)
+
+	handler := http.HandlerFunc(buildRequestFunction(GetManyHandler))
 
 	handler.ServeHTTP(rr, req)
 
@@ -59,7 +68,7 @@ func TestInvoiceGetManyHandlerWithItemsPerPage(t *testing.T) {
 	}
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(GetManyHandler)
+	handler := http.HandlerFunc(buildRequestFunction(GetManyHandler))
 
 	handler.ServeHTTP(rr, req)
 
@@ -85,7 +94,7 @@ func TestInvoiceGetManyHandlerWithUnparseableItemsPerPage(t *testing.T) {
 	}
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(GetManyHandler)
+	handler := http.HandlerFunc(buildRequestFunction(GetManyHandler))
 
 	handler.ServeHTTP(rr, req)
 
@@ -111,7 +120,7 @@ func TestInvoiceGetManyHandlerWithExcessiveItemsPerPage(t *testing.T) {
 	}
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(GetManyHandler)
+	handler := http.HandlerFunc(buildRequestFunction(GetManyHandler))
 
 	handler.ServeHTTP(rr, req)
 
@@ -139,7 +148,7 @@ func TestInvoiceGetManyHandlerWithPageNumber(t *testing.T) {
 	}
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(GetManyHandler)
+	handler := http.HandlerFunc(buildRequestFunction(GetManyHandler))
 
 	handler.ServeHTTP(rr, req)
 
@@ -165,7 +174,7 @@ func TestInvoiceGetManyHandlerWithUnparseablePageNumber(t *testing.T) {
 	}
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(GetManyHandler)
+	handler := http.HandlerFunc(buildRequestFunction(GetManyHandler))
 
 	handler.ServeHTTP(rr, req)
 

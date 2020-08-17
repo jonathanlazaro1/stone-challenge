@@ -7,5 +7,5 @@ import (
 // BuildInvoiceService builds an instance of Invoice
 func BuildInvoiceService() *Invoice {
 	repo := pgsql.GetInvoiceRepository()
-	return newInvoiceService(repo)
+	return NewInvoiceService(repo)
 }

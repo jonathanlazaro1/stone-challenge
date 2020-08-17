@@ -10,7 +10,8 @@ type Invoice struct {
 	interactor usecase.InvoiceInteractor
 }
 
-func newInvoiceService(repo usecase.InvoiceRepository) *Invoice {
+// NewInvoiceService builds an instance of InvoiceService using the specified InvoiceRepository
+func NewInvoiceService(repo usecase.InvoiceRepository) *Invoice {
 	return &Invoice{interactor: *usecase.NewInvoiceInteractor(repo)}
 }
 

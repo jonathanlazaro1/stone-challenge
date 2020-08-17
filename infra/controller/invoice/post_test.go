@@ -41,7 +41,7 @@ func TestInvoicePost(t *testing.T) {
 	}
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(PostHandler)
+	handler := http.HandlerFunc(buildRequestFunction(PostHandler))
 
 	handler.ServeHTTP(rr, req)
 
@@ -68,7 +68,7 @@ func TestInvoicePostWithFaultyProps(t *testing.T) {
 	}
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(PostHandler)
+	handler := http.HandlerFunc(buildRequestFunction(PostHandler))
 
 	handler.ServeHTTP(rr, req)
 
@@ -87,7 +87,7 @@ func TestInvoicePostWithNoBody(t *testing.T) {
 	}
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(PostHandler)
+	handler := http.HandlerFunc(buildRequestFunction(PostHandler))
 
 	handler.ServeHTTP(rr, req)
 
