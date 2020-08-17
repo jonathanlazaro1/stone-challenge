@@ -22,9 +22,9 @@ type Config struct {
 
 // Load attempts to load .env var from the projects's root folder
 func Load() {
-	// If this env var is present, other vars must be present on the container env
-	isRunningOnDocker := os.Getenv("IS_DOCKER")
-	if isRunningOnDocker != "" {
+	// If this env var is present, other vars must be present on the env host (e.g Docker, Heroku)
+	fetchVarsFromOSEnv := os.Getenv("OS_ENV_VARS")
+	if fetchVarsFromOSEnv != "" {
 		return
 	}
 

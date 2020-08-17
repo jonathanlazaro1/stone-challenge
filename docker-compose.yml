@@ -20,7 +20,7 @@ services:
     networks:
       - apinetwork
     environment:
-      - IS_DOCKER=true
+      - OS_ENV_VARS=true
       - DB_USER=postgres
       - DB_PASS=invoiceapi
       - DB_HOST=pgsqldb
