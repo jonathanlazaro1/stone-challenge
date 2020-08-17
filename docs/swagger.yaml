@@ -1,18 +1,25 @@
 basePath: /api/v1
 definitions:
-  authentication.AuthInfo:
+  authentication.AuthRequestModel:
     properties:
       email:
         type: string
       name:
         type: string
     type: object
-  authentication.TokenResponse:
+  authentication.AuthResponseModel:
     properties:
       token:
         type: string
     type: object
-  invoice.Invoice:
+  domain.AuthInfo:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+    type: object
+  domain.Invoice:
     properties:
       amount:
         format: float
@@ -40,17 +47,10 @@ definitions:
     properties:
       items:
         items:
-          $ref: '#/definitions/invoice.Invoice'
+          $ref: '#/definitions/domain.Invoice'
         type: array
       totalItems:
         type: integer
-    type: object
-  service.AuthModel:
-    properties:
-      email:
-        type: string
-      name:
-        type: string
     type: object
   service.PostModel:
     properties:
@@ -86,7 +86,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/authentication.AuthInfo'
+            $ref: '#/definitions/domain.AuthInfo'
         "401":
           description: Indicates that no authorization info was provided, or authorization is invalid.
           schema:
@@ -110,14 +110,14 @@ paths:
         name: authInfo
         required: true
         schema:
-          $ref: '#/definitions/service.AuthModel'
+          $ref: '#/definitions/authentication.AuthRequestModel'
       produces:
       - application/json
       responses:
         "200":
-          description: The JWT token that has been generated
+          description: Response containing the JWT token that has been generated
           schema:
-            $ref: '#/definitions/authentication.TokenResponse'
+            $ref: '#/definitions/authentication.AuthResponseModel'
         "400":
           description: Indicates a failure when parsing request body or a validation error, e.g. a required field is missing
           schema:
@@ -155,7 +155,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: Returns an object with the items found, among an integer indicating the total number of items for the query made.
+          description: Returns an object containing the array of Invoices found, among an integer indicating the total number of items for the query made.
           schema:
             $ref: '#/definitions/invoice.getManyResult'
         "400":
@@ -255,7 +255,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/invoice.Invoice'
+            $ref: '#/definitions/domain.Invoice'
         "400":
           description: Indicates a failure when parsing invoice Id
           schema:

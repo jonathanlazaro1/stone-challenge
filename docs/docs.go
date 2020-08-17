@@ -50,7 +50,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/authentication.AuthInfo"
+                            "$ref": "#/definitions/domain.AuthInfo"
                         }
                     },
                     "401": {
@@ -86,15 +86,15 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/service.AuthModel"
+                            "$ref": "#/definitions/authentication.AuthRequestModel"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "The JWT token that has been generated",
+                        "description": "Response containing the JWT token that has been generated",
                         "schema": {
-                            "$ref": "#/definitions/authentication.TokenResponse"
+                            "$ref": "#/definitions/authentication.AuthResponseModel"
                         }
                     },
                     "400": {
@@ -157,7 +157,7 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Returns an object with the items found, among an integer indicating the total number of items for the query made.",
+                        "description": "Returns an object containing the array of Invoices found, among an integer indicating the total number of items for the query made.",
                         "schema": {
                             "$ref": "#/definitions/invoice.getManyResult"
                         }
@@ -266,7 +266,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/invoice.Invoice"
+                            "$ref": "#/definitions/domain.Invoice"
                         }
                     },
                     "400": {
@@ -475,7 +475,7 @@ var doc = `{
         }
     },
     "definitions": {
-        "authentication.AuthInfo": {
+        "authentication.AuthRequestModel": {
             "type": "object",
             "properties": {
                 "email": {
@@ -486,7 +486,7 @@ var doc = `{
                 }
             }
         },
-        "authentication.TokenResponse": {
+        "authentication.AuthResponseModel": {
             "type": "object",
             "properties": {
                 "token": {
@@ -494,7 +494,18 @@ var doc = `{
                 }
             }
         },
-        "invoice.Invoice": {
+        "domain.AuthInfo": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.Invoice": {
             "type": "object",
             "properties": {
                 "amount": {
@@ -535,22 +546,11 @@ var doc = `{
                 "items": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/invoice.Invoice"
+                        "$ref": "#/definitions/domain.Invoice"
                     }
                 },
                 "totalItems": {
                     "type": "integer"
-                }
-            }
-        },
-        "service.AuthModel": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
                 }
             }
         },

@@ -20,7 +20,7 @@ const errCouldntParseInvoiceID = "Couldn't parse invoice Id"
 // @Produce  json
 // @Security JwtAuth
 // @Param id path int true "Id of the invoice to fetch"
-// @Success 200 {object} invoice.Invoice
+// @Success 200 {object} domain.Invoice
 // @Failure 400 {string} string "Indicates a failure when parsing invoice Id"
 // @Failure 401 {string} string "Indicates that no authorization info was provided, or authorization is invalid."
 // @Failure 404 {string} string "Indicates that no Invoice with given Id was found, or Invoice is deactivated"

@@ -11,7 +11,7 @@ func Router() *mux.Router {
 	router.StrictSlash(true)
 
 	router.PathPrefix("/swagger").HandlerFunc(httpSwagger.Handler(
-		httpSwagger.URL("https://stone-invoice-api.herokuapp.com/swagger/doc.json")))
+		httpSwagger.URL("/swagger/doc.json")))
 
 	apiv1 := router.PathPrefix("/api/v1/").Subrouter()
 
