@@ -13,7 +13,7 @@
         },
         "version": "1.0"
     },
-    "host": "https://stone-invoice-api.herokuapp.com",
+    "host": "stone-invoice-api.herokuapp.com",
     "basePath": "/api/v1",
     "paths": {
         "/auth": {
