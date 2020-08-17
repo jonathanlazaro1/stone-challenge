@@ -15,7 +15,7 @@ func execSQL(db *sql.DB, sql string) error {
 }
 
 // Migrate tries to update the PGSQL database that is set on environment, taking it to the state needed by application to work with
-func Migrate() {
+func Migrate() error {
 	db := CreateConnection()
 	defer db.Close()
 
@@ -31,21 +31,22 @@ func Migrate() {
 		return nil
 	})
 	if err != nil {
-		log.Fatalln("Could not execute PGSQL DB migration")
+		return err
 	}
 
 	// Go through the .sql files found on folder to exec the SQL statements
 	for _, file := range sqlFiles {
 		bytes, err := ioutil.ReadFile(file)
 		if err != nil {
-			log.Fatalf("Could not read file %v", file)
+			return err
 		}
 		sql := string(bytes)
 
 		err = execSQL(db, sql)
 		if err != nil {
-			log.Fatalf("Could not execute migration %v: %v", file, err)
+			return err
 		}
 	}
 	log.Println("PGSQL migrations applied successfully")
+	return nil
 }
