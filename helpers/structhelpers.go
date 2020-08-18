@@ -2,7 +2,8 @@ package helpers
 
 import "reflect"
 
-// CopyIfNotNil copies struct src fields that have a name match on dest, if their src pointer values are not nil
+// CopyIfNotNil copies struct src fields that have a name match on dest, if their src pointer values are not nil.
+// It panics if src values are not pointers
 func CopyIfNotNil(src interface{}, dest interface{}) {
 	destReflect := reflect.ValueOf(dest).Elem()
 	srcReflect := reflect.ValueOf(src).Elem()
@@ -15,10 +16,12 @@ func CopyIfNotNil(src interface{}, dest interface{}) {
 		if srcFieldValue.IsNil() {
 			continue
 		}
-		if srcFieldValue.Kind() == reflect.Ptr {
-			destField.Set(srcFieldValue.Elem())
-		} else {
+		if srcFieldValue.Kind() == reflect.Ptr && destField.Kind() == reflect.Ptr {
 			destField.Set(srcFieldValue)
+		} else if srcFieldValue.Kind() != reflect.Ptr && destField.Kind() == reflect.Ptr {
+			continue
+		} else {
+			destField.Set(srcFieldValue.Elem())
 		}
 	}
 }
