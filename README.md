@@ -13,7 +13,7 @@ A API utiliza-se das seguintes tecnologias:
   - pq (driver PGSQL nativo em Go)
   - goqu (builder de queries SQL)
 - Swagger (utilizando o package swag)
-- Heroku, GitHub Actions
+- Heroku, Azure Pipelines
 
 ## Execução
 
