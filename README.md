@@ -45,7 +45,7 @@ PORT=<<porta_da_api>>
 APP_AUTH_SECRET=<<chave_de_encrypt_token>>
 ```
 
-**OBS**: _há um arquivo ".env.example" que já vem pronto com as configurações do banco de dados do Docker, bastando renomeá-lo para ".env"._
+**OBS**: _há um arquivo ".env.example" que já vem pronto com as configurações do banco de dados do Docker, bastando renomeá-lo para ".env" e preencher as configurações restantes._
 
 4. Execute o script de migração do banco de dados:
 
