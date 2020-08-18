@@ -16,7 +16,8 @@ const errParsingItemsPerPage = "Error parsing items per page"
 const errMaxItemsPerPageAllowed = "Max items per page allowed: %v"
 const errParsingSortParams = "Error parsing sort params"
 
-type getManyResult struct {
+// InvoiceGetManyResult represents a successful response to get many invoices, containing the invoices found, if any, and the total count of the request query
+type InvoiceGetManyResult struct {
 	Items      []domain.Invoice `json:"items"`
 	TotalItems int64            `json:"totalItems"`
 }
@@ -58,7 +59,7 @@ func InvoiceGetManyHandler(svc service.InvoiceService) func(w http.ResponseWrite
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(getManyResult{
+		json.NewEncoder(w).Encode(InvoiceGetManyResult{
 			Items:      invoices,
 			TotalItems: total,
 		})

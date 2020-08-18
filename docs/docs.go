@@ -66,50 +66,6 @@ var doc = `{
                         }
                     }
                 }
-            },
-            "post": {
-                "description": "Generates a JWT token that can be used to consume Invoice endpoints.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "auth"
-                ],
-                "summary": "Authenticate",
-                "parameters": [
-                    {
-                        "description": "Auth Model. All fields are required.",
-                        "name": "authInfo",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/authentication.AuthRequestModel"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Response containing the JWT token that has been generated",
-                        "schema": {
-                            "$ref": "#/definitions/authentication.AuthResponseModel"
-                        }
-                    },
-                    "400": {
-                        "description": "Indicates a failure when parsing request body or a validation error, e.g. a required field is missing",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Indicates an error that was not handled by the server",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
             }
         },
         "/invoice": {
@@ -159,7 +115,7 @@ var doc = `{
                     "200": {
                         "description": "Returns an object containing the array of Invoices found, among an integer indicating the total number of items for the query made.",
                         "schema": {
-                            "$ref": "#/definitions/invoice.getManyResult"
+                            "$ref": "#/definitions/handler.InvoiceGetManyResult"
                         }
                     },
                     "400": {
@@ -475,25 +431,6 @@ var doc = `{
         }
     },
     "definitions": {
-        "authentication.AuthRequestModel": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "authentication.AuthResponseModel": {
-            "type": "object",
-            "properties": {
-                "token": {
-                    "type": "string"
-                }
-            }
-        },
         "domain.AuthInfo": {
             "type": "object",
             "properties": {
@@ -540,7 +477,7 @@ var doc = `{
                 }
             }
         },
-        "invoice.getManyResult": {
+        "handler.InvoiceGetManyResult": {
             "type": "object",
             "properties": {
                 "items": {
