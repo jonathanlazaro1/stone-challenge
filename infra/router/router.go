@@ -1,6 +1,8 @@
 package router
 
 import (
+	"net/http"
+
 	"github.com/gorilla/mux"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
@@ -12,6 +14,10 @@ func Router() *mux.Router {
 
 	router.PathPrefix("/swagger").HandlerFunc(httpSwagger.Handler(
 		httpSwagger.URL("/swagger/doc.json")))
+
+	router.PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, "/swagger/", http.StatusTemporaryRedirect)
+	})
 
 	apiv1 := router.PathPrefix("/api/v1/").Subrouter()
 
