@@ -6,7 +6,6 @@ import (
 	"os"
 	"testing"
 
-	"github.com/jonathanlazaro1/stone-challenge/config"
 	"github.com/jonathanlazaro1/stone-challenge/infra/service"
 	"github.com/jonathanlazaro1/stone-challenge/usecase"
 )
@@ -18,8 +17,6 @@ func makeParameterizedURL(final string) string {
 }
 
 func TestMain(m *testing.M) {
-	config.Load()
-
 	os.Exit(m.Run())
 }
 
