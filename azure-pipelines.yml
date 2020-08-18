@@ -19,9 +19,15 @@ steps:
   inputs:
     command: 'build'
     workingDirectory: '$(System.DefaultWorkingDirectory)'
+- task: Bash@3
+  displayName: 'Rename .env.example to .env (only to allow tests to run)'
+  inputs:
+    targetType: 'inline'
+    script: 'mv .env.example .env'
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
 - task: Go@0
-  displayName: "Run tests"
+  displayName: 'Run tests'
   inputs:
     command: 'test'
     arguments: '-v'
-    workingDirectory: '$(modulePath)'
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
