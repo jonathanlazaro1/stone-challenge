@@ -1,0 +1,34 @@
+# Go
+# Build your Go project.
+# Add steps that test, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/go
+
+trigger: 
+ - master
+
+pool:
+   vmImage: 'ubuntu-latest'
+
+steps: 
+- task: GoTool@0
+  displayName: 'Install Go v1.13'
+  inputs:
+    version: '1.13.8'
+- task: Go@0
+  displayName: 'Build application'
+  inputs:
+    command: 'build'
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
+- task: Bash@3
+  displayName: 'Rename .env.example to .env (only to allow tests to run)'
+  inputs:
+    targetType: 'inline'
+    script: 'mv .env.example .env'
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
+    failOnStderr: true
+- task: Go@0
+  displayName: 'Run tests'
+  inputs:
+    command: 'test'
+    arguments: './...'
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
