@@ -11,25 +11,16 @@ pool:
 
 steps: 
 - task: GoTool@0
+  displayName: 'Get Go v1.13'
   inputs:
     version: '1.13.8'
 - task: Go@0
-  inputs:
-    command: 'get'
-    arguments: '-d'
-    workingDirectory: '$(System.DefaultWorkingDirectory)'
-- task: Go@0
+  displayName: 'Build application'
   inputs:
     command: 'build'
     workingDirectory: '$(System.DefaultWorkingDirectory)'
-- task: CopyFiles@2
-  inputs:
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
-- task: PublishBuildArtifacts@1
-  inputs:
-     artifactName: drop
-
 - task: Go@0
+  displayName: "Run tests"
   inputs:
     command: 'test'
     arguments: '-v'
