@@ -1,5 +1,7 @@
 # Stone Challenge
 
+![tests](https://github.com/jonathanlazaro1/stone-challenge/workflows/tests/badge.svg)
+
 Esta API Rest foi desenvolvida para o desafio técnico da empresa [Stone](https://www.stone.com.br), e consiste em um gerenciador de Notas Fiscais. A mesma encontra-se publicada, e sua documentação de uso pode ser consultada através do seguinte link:
 https://stone-invoice-api.herokuapp.com/swagger/index.html
 
