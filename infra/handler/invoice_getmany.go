@@ -1,4 +1,4 @@
-package invoice
+package handler
 
 import (
 	"encoding/json"
@@ -21,8 +21,8 @@ type getManyResult struct {
 	TotalItems int64            `json:"totalItems"`
 }
 
-// GetManyHandler handles a request to many Invoices
-func GetManyHandler(svc service.InvoiceService) func(w http.ResponseWriter, r *http.Request) {
+// InvoiceGetManyHandler handles a request to many Invoices
+func InvoiceGetManyHandler(svc service.InvoiceService) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		pathParams := r.URL.Query()
 

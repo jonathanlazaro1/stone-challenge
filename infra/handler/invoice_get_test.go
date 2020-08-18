@@ -1,4 +1,4 @@
-package invoice
+package handler
 
 import (
 	"fmt"
@@ -21,7 +21,7 @@ func TestInvoiceGetById(t *testing.T) {
 
 	rr := httptest.NewRecorder()
 	router := mux.NewRouter()
-	router.HandleFunc(makeParameterizedURL("{id}"), buildRequestFunction(GetHandler))
+	router.HandleFunc(makeParameterizedURL("{id}"), buildRequestFunction(InvoiceGetHandler))
 	router.ServeHTTP(rr, req)
 
 	statusWant := http.StatusOK
@@ -45,7 +45,7 @@ func TestInvoiceGetByIdWithUnparseableId(t *testing.T) {
 
 	rr := httptest.NewRecorder()
 	router := mux.NewRouter()
-	router.HandleFunc(makeParameterizedURL("{id}"), buildRequestFunction(GetHandler))
+	router.HandleFunc(makeParameterizedURL("{id}"), buildRequestFunction(InvoiceGetHandler))
 	router.ServeHTTP(rr, req)
 
 	statusWant := http.StatusBadRequest

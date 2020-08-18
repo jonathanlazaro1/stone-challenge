@@ -1,4 +1,4 @@
-package invoice
+package handler
 
 import (
 	"bytes"
@@ -20,7 +20,7 @@ func TestInvoiceUpdate(t *testing.T) {
 
 	rr := httptest.NewRecorder()
 	router := mux.NewRouter()
-	router.HandleFunc(makeParameterizedURL("{id}"), buildRequestFunction(UpdateHandler))
+	router.HandleFunc(makeParameterizedURL("{id}"), buildRequestFunction(InvoiceUpdateHandler))
 	router.ServeHTTP(rr, req)
 
 	statusWant := http.StatusNoContent
@@ -43,7 +43,7 @@ func TestInvoicePutWithFaultyProps(t *testing.T) {
 
 	rr := httptest.NewRecorder()
 	router := mux.NewRouter()
-	router.HandleFunc(makeParameterizedURL("{id}"), buildRequestFunction(UpdateHandler))
+	router.HandleFunc(makeParameterizedURL("{id}"), buildRequestFunction(InvoiceUpdateHandler))
 	router.ServeHTTP(rr, req)
 
 	statusWant := http.StatusBadRequest
@@ -62,7 +62,7 @@ func TestInvoiceUpdateWithNoBody(t *testing.T) {
 
 	rr := httptest.NewRecorder()
 	router := mux.NewRouter()
-	router.HandleFunc(makeParameterizedURL("{id}"), buildRequestFunction(UpdateHandler))
+	router.HandleFunc(makeParameterizedURL("{id}"), buildRequestFunction(InvoiceUpdateHandler))
 	router.ServeHTTP(rr, req)
 
 	statusWant := http.StatusBadRequest
@@ -91,7 +91,7 @@ func TestInvoicePatch(t *testing.T) {
 
 	rr := httptest.NewRecorder()
 	router := mux.NewRouter()
-	router.HandleFunc(makeParameterizedURL("{id}"), buildRequestFunction(UpdateHandler))
+	router.HandleFunc(makeParameterizedURL("{id}"), buildRequestFunction(InvoiceUpdateHandler))
 	router.ServeHTTP(rr, req)
 
 	statusWant := http.StatusNoContent

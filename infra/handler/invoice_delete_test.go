@@ -1,4 +1,4 @@
-package invoice
+package handler
 
 import (
 	"bytes"
@@ -20,7 +20,7 @@ func TestInvoiceDelete(t *testing.T) {
 
 	rr := httptest.NewRecorder()
 	router := mux.NewRouter()
-	router.HandleFunc(makeParameterizedURL("{id}"), buildRequestFunction(DeleteHandler))
+	router.HandleFunc(makeParameterizedURL("{id}"), buildRequestFunction(InvoiceDeleteHandler))
 	router.ServeHTTP(rr, req)
 
 	statusWant := http.StatusNoContent
@@ -38,7 +38,7 @@ func TestInvoiceDeleteWithUnparseableId(t *testing.T) {
 
 	rr := httptest.NewRecorder()
 	router := mux.NewRouter()
-	router.HandleFunc(makeParameterizedURL("{id}"), buildRequestFunction(GetHandler))
+	router.HandleFunc(makeParameterizedURL("{id}"), buildRequestFunction(InvoiceDeleteHandler))
 	router.ServeHTTP(rr, req)
 
 	statusWant := http.StatusBadRequest

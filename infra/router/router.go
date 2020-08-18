@@ -15,7 +15,7 @@ func Router() *mux.Router {
 	router.PathPrefix("/swagger").HandlerFunc(httpSwagger.Handler(
 		httpSwagger.URL("/swagger/doc.json")))
 
-	router.PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	router.Path("/").Methods("GET").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/swagger/", http.StatusTemporaryRedirect)
 	})
 

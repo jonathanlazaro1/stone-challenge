@@ -1,4 +1,4 @@
-package invoice
+package handler
 
 import (
 	"encoding/json"
@@ -13,8 +13,8 @@ import (
 
 const errCouldntParsePostModel = "Couldn't parse invoice"
 
-// PostHandler handles a request to post an Invoice
-func PostHandler(svc service.InvoiceService) func(w http.ResponseWriter, r *http.Request) {
+// InvoicePostHandler handles a request to post an Invoice
+func InvoicePostHandler(svc service.InvoiceService) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var model service.PostModel
 		err := json.NewDecoder(r.Body).Decode(&model)

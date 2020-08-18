@@ -1,4 +1,4 @@
-package invoice
+package handler
 
 import (
 	"io"
@@ -10,8 +10,8 @@ import (
 	"github.com/jonathanlazaro1/stone-challenge/infra/service"
 )
 
-// DeleteHandler handles a request to delete an Invoice
-func DeleteHandler(svc service.InvoiceService) func(w http.ResponseWriter, r *http.Request) {
+// InvoiceDeleteHandler handles a request to delete an Invoice
+func InvoiceDeleteHandler(svc service.InvoiceService) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		id, err := strconv.Atoi(vars["id"])

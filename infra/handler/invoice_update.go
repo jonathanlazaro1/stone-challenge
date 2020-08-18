@@ -1,4 +1,4 @@
-package invoice
+package handler
 
 import (
 	"encoding/json"
@@ -13,8 +13,8 @@ import (
 	"github.com/jonathanlazaro1/stone-challenge/infra/service"
 )
 
-// UpdateHandler handles a request to update an Invoice
-func UpdateHandler(svc service.InvoiceService) func(w http.ResponseWriter, r *http.Request) {
+// InvoiceUpdateHandler handles a request to update an Invoice
+func InvoiceUpdateHandler(svc service.InvoiceService) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		id, err := strconv.Atoi(vars["id"])

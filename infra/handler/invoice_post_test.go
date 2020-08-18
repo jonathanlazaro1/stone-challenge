@@ -1,4 +1,4 @@
-package invoice
+package handler
 
 import (
 	"bytes"
@@ -21,7 +21,7 @@ func TestInvoicePost(t *testing.T) {
 	}
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(buildRequestFunction(PostHandler))
+	handler := http.HandlerFunc(buildRequestFunction(InvoicePostHandler))
 
 	handler.ServeHTTP(rr, req)
 
@@ -48,7 +48,7 @@ func TestInvoicePostWithFaultyProps(t *testing.T) {
 	}
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(buildRequestFunction(PostHandler))
+	handler := http.HandlerFunc(buildRequestFunction(InvoicePostHandler))
 
 	handler.ServeHTTP(rr, req)
 
@@ -67,7 +67,7 @@ func TestInvoicePostWithNoBody(t *testing.T) {
 	}
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(buildRequestFunction(PostHandler))
+	handler := http.HandlerFunc(buildRequestFunction(InvoicePostHandler))
 
 	handler.ServeHTTP(rr, req)
 

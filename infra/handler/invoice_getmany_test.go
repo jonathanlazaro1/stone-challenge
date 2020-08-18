@@ -1,4 +1,4 @@
-package invoice
+package handler
 
 import (
 	"fmt"
@@ -20,7 +20,7 @@ func TestInvoiceGetManyWithoutParameters(t *testing.T) {
 
 	rr := httptest.NewRecorder()
 
-	handler := http.HandlerFunc(buildRequestFunction(GetManyHandler))
+	handler := http.HandlerFunc(buildRequestFunction(InvoiceGetManyHandler))
 
 	handler.ServeHTTP(rr, req)
 
@@ -48,7 +48,7 @@ func TestInvoiceGetManyWithItemsPerPage(t *testing.T) {
 	}
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(buildRequestFunction(GetManyHandler))
+	handler := http.HandlerFunc(buildRequestFunction(InvoiceGetManyHandler))
 
 	handler.ServeHTTP(rr, req)
 
@@ -74,7 +74,7 @@ func TestInvoiceGetManyWithUnparseableItemsPerPage(t *testing.T) {
 	}
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(buildRequestFunction(GetManyHandler))
+	handler := http.HandlerFunc(buildRequestFunction(InvoiceGetManyHandler))
 
 	handler.ServeHTTP(rr, req)
 
@@ -100,7 +100,7 @@ func TestInvoiceGetManyHandlerWithExcessiveItemsPerPage(t *testing.T) {
 	}
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(buildRequestFunction(GetManyHandler))
+	handler := http.HandlerFunc(buildRequestFunction(InvoiceGetManyHandler))
 
 	handler.ServeHTTP(rr, req)
 
@@ -128,7 +128,7 @@ func TestInvoiceGetManyHandlerWithPageNumber(t *testing.T) {
 	}
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(buildRequestFunction(GetManyHandler))
+	handler := http.HandlerFunc(buildRequestFunction(InvoiceGetManyHandler))
 
 	handler.ServeHTTP(rr, req)
 
@@ -154,7 +154,7 @@ func TestInvoiceGetManyHandlerWithUnparseablePageNumber(t *testing.T) {
 	}
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(buildRequestFunction(GetManyHandler))
+	handler := http.HandlerFunc(buildRequestFunction(InvoiceGetManyHandler))
 
 	handler.ServeHTTP(rr, req)
 

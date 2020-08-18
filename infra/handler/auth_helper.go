@@ -1,9 +1,12 @@
-package authentication
+package handler
 
 import (
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/go-ozzo/ozzo-validation/is"
 )
+
+const errCouldntParseAuthModel = "Couldn't parse auth model"
+const errCouldntGenerateToken = "Couldn't generate auth token"
 
 // AuthRequestModel is the request body expected to a Auth request
 type AuthRequestModel struct {

@@ -3,13 +3,18 @@ package controller
 import (
 	"net/http"
 
-	"github.com/jonathanlazaro1/stone-challenge/infra/controller/invoice"
+	"github.com/jonathanlazaro1/stone-challenge/infra/handler"
 	"github.com/jonathanlazaro1/stone-challenge/infra/service"
 )
 
 // InvoiceController groups handlers and injects services for invoice-related requests
 type InvoiceController struct {
 	service service.InvoiceService
+}
+
+// BuildInvoiceController builds an Invoice Controller, injecting an Invoice Service on it
+func BuildInvoiceController() *InvoiceController {
+	return &InvoiceController{service: *service.BuildInvoiceService()}
 }
 
 // GetMany handles a request to many Invoices
@@ -28,7 +33,7 @@ type InvoiceController struct {
 // @Failure 500 {string} string "Indicates an error that was not handled by the server"
 // @Router /invoice [get]
 func (controller *InvoiceController) GetMany(w http.ResponseWriter, r *http.Request) {
-	f := invoice.GetManyHandler(controller.service)
+	f := handler.InvoiceGetManyHandler(controller.service)
 	f(w, r)
 }
 
@@ -46,7 +51,7 @@ func (controller *InvoiceController) GetMany(w http.ResponseWriter, r *http.Requ
 // @Failure 500 {string} string "Indicates an error that was not handled by the server"
 // @Router /invoice/{id} [get]
 func (controller *InvoiceController) Get(w http.ResponseWriter, r *http.Request) {
-	f := invoice.GetHandler(controller.service)
+	f := handler.InvoiceGetHandler(controller.service)
 	f(w, r)
 }
 
@@ -64,7 +69,7 @@ func (controller *InvoiceController) Get(w http.ResponseWriter, r *http.Request)
 // @Failure 500 {string} string "Indicates an error that was not handled by the server"
 // @Router /invoice [post]
 func (controller *InvoiceController) Post(w http.ResponseWriter, r *http.Request) {
-	f := invoice.PostHandler(controller.service)
+	f := handler.InvoicePostHandler(controller.service)
 	f(w, r)
 }
 
@@ -84,7 +89,7 @@ func (controller *InvoiceController) Post(w http.ResponseWriter, r *http.Request
 // @Failure 500 {string} string "Indicates an error that was not handled by the server"
 // @Router /invoice/{id} [put]
 func (controller *InvoiceController) Put(w http.ResponseWriter, r *http.Request) {
-	f := invoice.UpdateHandler(controller.service)
+	f := handler.InvoiceUpdateHandler(controller.service)
 	f(w, r)
 }
 
@@ -104,7 +109,7 @@ func (controller *InvoiceController) Put(w http.ResponseWriter, r *http.Request)
 // @Failure 500 {string} string "Indicates an error that was not handled by the server"
 // @Router /invoice/{id} [patch]
 func (controller *InvoiceController) Patch(w http.ResponseWriter, r *http.Request) {
-	f := invoice.UpdateHandler(controller.service)
+	f := handler.InvoiceUpdateHandler(controller.service)
 	f(w, r)
 }
 
@@ -121,11 +126,6 @@ func (controller *InvoiceController) Patch(w http.ResponseWriter, r *http.Reques
 // @Failure 500 {string} string "Indicates an error that was not handled by the server"
 // @Router /invoice/{id} [delete]
 func (controller *InvoiceController) Delete(w http.ResponseWriter, r *http.Request) {
-	f := invoice.DeleteHandler(controller.service)
+	f := handler.InvoiceDeleteHandler(controller.service)
 	f(w, r)
-}
-
-// BuildInvoiceController builds an Invoice Controller, injecting an Invoice Service on it
-func BuildInvoiceController() *InvoiceController {
-	return &InvoiceController{service: *service.BuildInvoiceService()}
 }
