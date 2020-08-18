@@ -25,6 +25,7 @@ steps:
     targetType: 'inline'
     script: 'mv .env.example .env'
     workingDirectory: '$(System.DefaultWorkingDirectory)'
+    failOnStderr: true
 - task: Go@0
   displayName: 'Run tests'
   inputs:
