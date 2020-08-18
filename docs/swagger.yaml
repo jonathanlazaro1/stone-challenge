@@ -31,6 +31,18 @@ definitions:
       referenceYear:
         type: integer
     type: object
+  handler.AuthRequestModel:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+    type: object
+  handler.AuthResponseModel:
+    properties:
+      token:
+        type: string
+    type: object
   handler.InvoiceGetManyResult:
     properties:
       items:
@@ -86,6 +98,35 @@ paths:
       security:
       - JwtAuth: []
       summary: Get authentication Info
+      tags:
+      - auth
+    post:
+      consumes:
+      - application/json
+      description: Generates a JWT token that can be used to consume Invoice endpoints.
+      parameters:
+      - description: Auth Model. All fields are required.
+        in: body
+        name: authInfo
+        required: true
+        schema:
+          $ref: '#/definitions/handler.AuthRequestModel'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Response containing the JWT token that has been generated
+          schema:
+            $ref: '#/definitions/handler.AuthResponseModel'
+        "400":
+          description: Indicates a failure when parsing request body or a validation error, e.g. a required field is missing
+          schema:
+            type: string
+        "500":
+          description: Indicates an error that was not handled by the server
+          schema:
+            type: string
+      summary: Authenticate
       tags:
       - auth
   /invoice:

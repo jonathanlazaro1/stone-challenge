@@ -10,16 +10,17 @@ import (
 type AuthController struct {
 }
 
-// Authenticate handles requests to get the authenticated user info
-// @Summary Get authentication Info
-// @Description Get authentication info, according to the token passed in the request header.
+// Authenticate processes requests to authentication
+// @Summary Authenticate
+// @Description Generates a JWT token that can be used to consume Invoice endpoints.
 // @Tags auth
+// @Accept json
 // @Produce  json
-// @Security JwtAuth
-// @Success 200 {object} domain.AuthInfo
-// @Failure 401 {string} string "Indicates that no authorization info was provided, or authorization is invalid."
+// @Param authInfo body handler.AuthRequestModel true "Auth Model. All fields are required."
+// @Success 200 {object} handler.AuthResponseModel "Response containing the JWT token that has been generated"
+// @Failure 400 {string} string "Indicates a failure when parsing request body or a validation error, e.g. a required field is missing"
 // @Failure 500 {string} string "Indicates an error that was not handled by the server"
-// @Router /auth [get]
+// @Router /auth [post]
 func (controller *AuthController) Authenticate(w http.ResponseWriter, r *http.Request) {
 	handler.AuthPostTokenHandler(w, r)
 }

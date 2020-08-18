@@ -51,6 +51,50 @@
                         }
                     }
                 }
+            },
+            "post": {
+                "description": "Generates a JWT token that can be used to consume Invoice endpoints.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Authenticate",
+                "parameters": [
+                    {
+                        "description": "Auth Model. All fields are required.",
+                        "name": "authInfo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handler.AuthRequestModel"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Response containing the JWT token that has been generated",
+                        "schema": {
+                            "$ref": "#/definitions/handler.AuthResponseModel"
+                        }
+                    },
+                    "400": {
+                        "description": "Indicates a failure when parsing request body or a validation error, e.g. a required field is missing",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Indicates an error that was not handled by the server",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
             }
         },
         "/invoice": {
@@ -459,6 +503,25 @@
                 },
                 "referenceYear": {
                     "type": "integer"
+                }
+            }
+        },
+        "handler.AuthRequestModel": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.AuthResponseModel": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string"
                 }
             }
         },
