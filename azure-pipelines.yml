@@ -25,3 +25,11 @@ steps:
     command: 'test'
     arguments: './...'
     workingDirectory: '$(System.DefaultWorkingDirectory)'
+- task: Bash@3
+  displayName: 'Deploy to Heroku'
+  inputs:
+    targetType: 'inline'
+    script: |
+      git checkout $(Build.SourceBranchName)
+      git remote add heroku https://heroku:$(heroku_token)@git.heroku.com/stone-invoice-api.git
+      git push heroku $(Build.SourceBranchName)
